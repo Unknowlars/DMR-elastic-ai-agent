@@ -1,0 +1,11 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-surviving-by-decade",
+  "type": "esql",
+  "description": "How many passenger cars from each decade of registration are still on Danish roads today, with survival percentage. Use for 'how many 1980s cars survive', 'is a car from 1995 rare now', 'survival rate by decade', 'how many old cars are still registered', or 'what percentage of 1970s cars still exist'. Caveat: pre-1980 surviving cars overrepresent preserved classics due to survivorship bias — ordinary cars from those decades have mostly been scrapped.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejArtNavn.keyword == \"Personbil\" AND _foerste_registrering_aar IS NOT NULL AND _foerste_registrering_aar >= 1900 AND _foerste_registrering_aar <= DATE_EXTRACT(\"year\", NOW()) | EVAL decade = CONCAT(TO_STRING((_foerste_registrering_aar / 10) * 10), \"s\") | STATS all_time = COUNT(*), currently_registered = COUNT(*) WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" BY decade | EVAL survival_pct = ROUND(currently_registered * 100.0 / all_time, 1) | WHERE all_time >= 100 | SORT decade ASC | LIMIT 15",
+    "params": {}
+  },
+  "tags": ["domain", "dmr", "analytics", "historical"]
+}

@@ -1,0 +1,15 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-inspection-by-age",
+  "type": "esql",
+  "description": "Cross-tabulates current passenger-car inspection results by registration-year age bands. Use for whether older cars fail more. Registry inspection field only, not a time-bounded campaign.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND SynResultatStruktur.SynResultatSynsResultat.keyword IS NOT NULL AND _foerste_registrering_aar IS NOT NULL AND _foerste_registrering_aar >= 1900 AND _foerste_registrering_aar <= 2030 | EVAL age_band = CASE(_foerste_registrering_aar < 2005, \"Before 2005\", _foerste_registrering_aar < 2010, \"2005-2009\", _foerste_registrering_aar < 2015, \"2010-2014\", _foerste_registrering_aar < 2020, \"2015-2019\", \"2020 or newer\") | STATS car_count = COUNT(*) BY age_band, inspection_result = SynResultatStruktur.SynResultatSynsResultat.keyword | SORT age_band ASC, car_count DESC | LIMIT 40",
+    "params": {}
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

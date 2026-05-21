@@ -1,0 +1,34 @@
+{
+  "kind": "agent",
+  "id": "dmr-performance",
+  "name": "DMR Performance Analyst",
+  "description": "Small-model focused DMR agent for engine power, cylinders, top speed, weight, towing capacity, CO2 bands, emissions standards, power-to-weight ratios, and brand performance comparisons. Redirects uncovered analytical edge cases to dmr-analyst.",
+  "instructions_file": "prompts/dmr-performance.instructions.md",
+  "skill_ids": [
+    "dmr-glossary",
+    "dmr-buyer-guide",
+    "dmr-fun-facts"
+  ],
+  "tool_ids": [
+    "dmr-car-performance-summary",
+    "dmr-car-power-segment-summary",
+    "dmr-car-brand-performance-summary",
+    "dmr-car-above-average-power-brands",
+    "dmr-car-high-power-list",
+    "dmr-car-top-models-per-brand",
+    "dmr-car-power-to-weight-summary",
+    "dmr-car-power-to-weight-list",
+    "dmr-car-cylinder-count-summary",
+    "dmr-car-cylinder-brand-model-list",
+    "dmr-car-weight-distribution",
+    "dmr-car-towing-capacity-by-brand",
+    "dmr-car-towing-to-kerbweight-by-brand",
+    "dmr-car-emission-norm-summary",
+    "dmr-car-co2-tier-summary",
+    "dmr-car-ev-share-by-body-style",
+    "dmr-car-practical-features-summary",
+    "dmr-car-fuel-brand-breakdown",
+    "dmr-car-ev-brand-ranking",
+    "dmr-car-weight-trend-by-year"
+  ]
+}

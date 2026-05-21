@@ -1,0 +1,15 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-fuel-brand-breakdown",
+  "type": "esql",
+  "description": "Brand-by-fuel breakdown of registered passenger cars, sorted by count. Use when user asks which brands are most electric/diesel/petrol or compares fuel mix across brands.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND _drivkraft_primaer IS NOT NULL | STATS car_count = COUNT(*) BY brand = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword, fuel = _drivkraft_primaer | SORT car_count DESC | LIMIT 80",
+    "params": {}
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

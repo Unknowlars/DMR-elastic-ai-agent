@@ -1,0 +1,15 @@
+{
+  "kind": "tool",
+  "id": "dmr-top-brands",
+  "type": "esql",
+  "description": "Top brands across all registered vehicle types. Use when user asks most common makes across all vehicles. Passenger-car only: dmr-car-top-brands.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" | STATS vehicle_count = COUNT(*) BY brand = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword | SORT vehicle_count DESC | LIMIT 20",
+    "params": {}
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-registration-by-month",
+  "type": "esql",
+  "description": "All-time month-of-year distribution of passenger-car first registrations. Use when user asks about car-buying season, peak month, or seasonality of registrations.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningFoersteRegistreringDato IS NOT NULL | EVAL reg_month = DATE_EXTRACT(\"month_of_year\", KoeretoejOplysningGrundStruktur.KoeretoejOplysningFoersteRegistreringDato) | STATS car_count = COUNT(*) BY reg_month | SORT reg_month ASC | LIMIT 12",
+    "params": {}
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics",
+    "historical"
+  ]
+}

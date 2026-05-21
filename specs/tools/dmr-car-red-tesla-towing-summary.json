@@ -1,0 +1,21 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-red-tesla-towing-summary",
+  "type": "esql",
+  "description": "Red Tesla registered passenger cars with braked towing capacity above a threshold, grouped by model. Use for red Tesla towing questions.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword == \"TESLA\" AND KoeretoejOplysningGrundStruktur.KoeretoejFarveStruktur.FarveTypeStruktur.FarveTypeNavn.keyword == \"R\u00f8d\" | EVAL braked_towing_kg = KoeretoejOplysningGrundStruktur.KoeretoejOplysningTilkoblingsvaegtMedBremser | WHERE braked_towing_kg > ?min_towing_kg AND braked_towing_kg <= 5000 | STATS car_count = COUNT(*), avg_braked_towing_kg = AVG(braked_towing_kg), max_braked_towing_kg = MAX(braked_towing_kg) BY model = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.Model.KoeretoejModelTypeNavn.keyword | SORT car_count DESC, max_braked_towing_kg DESC | LIMIT 20",
+    "params": {
+      "min_towing_kg": {
+        "type": "integer",
+        "description": "Minimum braked towing capacity in kg, e.g. 1500.",
+        "default": 1500
+      }
+    }
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

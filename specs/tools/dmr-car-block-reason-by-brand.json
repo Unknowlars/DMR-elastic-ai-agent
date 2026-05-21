@@ -1,0 +1,21 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-block-reason-by-brand",
+  "type": "esql",
+  "description": "Top passenger-car brands by count of cars carrying a specific administrative block reason (default 'Totalskadet køretøj'). Use when user asks which brands end up totalskadet/written-off most often. Counts include both still-registered and deregistered cars — use dmr-car-block-reason-summary for the breakdown.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KoeretoejBlokeringAarsagListeStruktur.KoeretoejBlokeringAarsagListe.KoeretoejBlokeringAarsag.KoeretoejBlokeringAarsagTypeNavn.keyword == ?block_reason AND KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword IS NOT NULL | STATS car_count = COUNT(*) BY brand = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword | SORT car_count DESC | LIMIT 25",
+    "params": {
+      "block_reason": {
+        "type": "string",
+        "description": "Block reason name as in KoeretoejBlokeringAarsagTypeNavn. Known values: 'Totalskadet køretøj', 'Skadet køretøj', 'Mangel', 'Køretøjet er blokeret', 'Indkaldt til registrering', 'Henvist til SKAT'.",
+        "default": "Totalskadet køretøj"
+      }
+    }
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

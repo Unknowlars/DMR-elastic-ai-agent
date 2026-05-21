@@ -1,0 +1,15 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-top-brands",
+  "type": "esql",
+  "description": "Top passenger-car brands by count, registered Personbil only. Use when user asks most common car makes. All-vehicle ranking: dmr-top-brands.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" | STATS car_count = COUNT(*) BY brand = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword | SORT car_count DESC | LIMIT 20",
+    "params": {}
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

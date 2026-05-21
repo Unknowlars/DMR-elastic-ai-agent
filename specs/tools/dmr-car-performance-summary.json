@@ -1,0 +1,15 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-performance-summary",
+  "type": "esql",
+  "description": "Percentile summary of current passenger-car power kW, certified top speed km/h, and displacement cc. Use for typical/extreme power or speed questions. Convert kW to hp. Bounds: power 1-750 kW, speed 50-400 km/h.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" | EVAL kw_clean = CLAMP(KoeretoejOplysningGrundStruktur.KoeretoejMotorStruktur.KoeretoejMotorStoersteEffekt, 1, 750), speed_clean = CLAMP(KoeretoejOplysningGrundStruktur.KoeretoejOplysningMaksimumHastighed, 50, 400) | STATS car_count_with_power = COUNT(kw_clean), avg_power_kw = AVG(kw_clean), p50_power_kw = PERCENTILE(kw_clean, 50), p90_power_kw = PERCENTILE(kw_clean, 90), p99_power_kw = PERCENTILE(kw_clean, 99), max_power_kw = MAX(kw_clean), p50_speed_kmh = PERCENTILE(speed_clean, 50), p90_speed_kmh = PERCENTILE(speed_clean, 90), p99_speed_kmh = PERCENTILE(speed_clean, 99), max_speed_kmh = MAX(speed_clean) | LIMIT 1",
+    "params": {}
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

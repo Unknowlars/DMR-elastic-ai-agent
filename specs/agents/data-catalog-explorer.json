@@ -1,0 +1,19 @@
+{
+  "kind": "agent",
+  "id": "data-catalog-explorer",
+  "name": "Data Catalog Explorer",
+  "description": "Inventories indices, groups them into candidate datasets, and recommends which datasets deserve dedicated tools or agents.",
+  "instructions_file": "prompts/data-catalog-explorer.instructions.md",
+  "tool_ids": [
+    "platform.core.list_indices",
+    "platform.core.index_explorer",
+    "platform.core.get_index_mapping",
+    "platform.core.search"
+  ],
+  "tags": [
+    "discovery",
+    "catalog",
+    "bootstrap"
+  ]
+}
+

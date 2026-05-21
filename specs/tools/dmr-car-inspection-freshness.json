@@ -1,0 +1,15 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-inspection-freshness",
+  "type": "esql",
+  "description": "Returns latest stored inspection-year distribution for current registered passenger cars. Use for inspection recency/freshness questions. Not a legal overdue-compliance verdict by itself.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND SynResultatStruktur.SynResultatSynsDato IS NOT NULL | EVAL insp_year = DATE_EXTRACT(\"year\", SynResultatStruktur.SynResultatSynsDato) | WHERE insp_year >= 1990 AND insp_year <= 2030 | STATS car_count = COUNT(*) BY insp_year | SORT insp_year DESC | LIMIT 20",
+    "params": {}
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

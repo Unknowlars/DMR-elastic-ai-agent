@@ -1,0 +1,15 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-block-reason-summary",
+  "type": "esql",
+  "description": "Counts registered passenger cars per administrative block reason in DMR (Totalskadet køretøj, Skadet køretøj, Mangel, Køretøjet er blokeret, Indkaldt til registrering, Henvist til SKAT). Use when user asks about totalskadede biler, write-offs, salvage, or blocked vehicles. Block reasons come from KoeretoejBlokeringAarsagListe — distinct from the Trafikskade boolean flag (dmr-car-accident-summary).",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KoeretoejBlokeringAarsagListeStruktur.KoeretoejBlokeringAarsagListe.KoeretoejBlokeringAarsag.KoeretoejBlokeringAarsagTypeNavn.keyword IS NOT NULL | STATS car_count = COUNT(*), still_registered = COUNT(*) WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\", deregistered = COUNT(*) WHERE KoeretoejRegistreringStatus.keyword == \"Afmeldt\" BY block_reason = KoeretoejOplysningGrundStruktur.KoeretoejBlokeringAarsagListeStruktur.KoeretoejBlokeringAarsagListe.KoeretoejBlokeringAarsag.KoeretoejBlokeringAarsagTypeNavn.keyword | SORT car_count DESC | LIMIT 25",
+    "params": {}
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

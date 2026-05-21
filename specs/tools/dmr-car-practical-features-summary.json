@@ -1,0 +1,15 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-practical-features-summary",
+  "type": "esql",
+  "description": "Summarizes practical features of the current registered Danish passenger-car fleet. Use for questions about towing capability, towing weights, five-seat and seven-seat cars, or taxi-suitable cars.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" | EVAL tow_capable = TO_INTEGER(KoeretoejOplysningGrundStruktur.KoeretoejOplysningTilkoblingMulighed), taxi_suitable = TO_INTEGER(KoeretoejOplysningGrundStruktur.KoeretoejOplysningEgnetTilTaxi), seats = KoeretoejOplysningGrundStruktur.KoeretoejOplysningSiddepladserMinimum, braked_towing_weight = CLAMP(KoeretoejOplysningGrundStruktur.KoeretoejOplysningTilkoblingsvaegtMedBremser, 0, 5000) | STATS cars_with_tow_capability = SUM(tow_capable), cars_without_tow_capability = COUNT(*) - SUM(tow_capable), avg_braked_towing_weight = AVG(braked_towing_weight), max_braked_towing_weight_capped = MAX(braked_towing_weight), five_seat_cars = SUM(CASE(seats == 5, 1, 0)), seven_seat_cars = SUM(CASE(seats == 7, 1, 0)), taxi_suitable_cars = SUM(taxi_suitable) | LIMIT 1",
+    "params": {}
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

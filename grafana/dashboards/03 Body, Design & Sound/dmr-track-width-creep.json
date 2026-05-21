@@ -1,0 +1,728 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "Cars aren't just longer — they're noticeably wider. Average front track has grown from 1,297 mm in the 1950s fleet to 1,568 mm in the 2020s fleet (+271 mm, +21%).",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [
+    {
+      "asDropdown": true,
+      "includeVars": true,
+      "keepTime": true,
+      "tags": [
+        "dmr"
+      ],
+      "targetBlank": false,
+      "title": "DMR dashboard suite",
+      "type": "dashboards"
+    }
+  ],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 5,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenForrest > 1000 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenForrest < 2500 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenBagest > 1000 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenBagest < 2500 | STATS cars_with_track = COUNT(*)",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Cars With Track Width Data",
+      "type": "stat",
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "unit": "lengthmm"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 5,
+        "x": 5,
+        "y": 0
+      },
+      "id": 2,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenForrest > 1000 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenForrest < 2500 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenBagest > 1000 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenBagest < 2500 | STATS avg_front_track = AVG(KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenForrest)",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Avg Front Track (mm)",
+      "type": "stat",
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "unit": "lengthmm"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 5,
+        "x": 10,
+        "y": 0
+      },
+      "id": 3,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenForrest > 1000 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenForrest < 2500 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenBagest > 1000 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenBagest < 2500 | STATS avg_rear_track = AVG(KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenBagest)",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Avg Rear Track (mm)",
+      "type": "stat",
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "unit": "lengthmm"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 5,
+        "x": 15,
+        "y": 0
+      },
+      "id": 4,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenForrest > 1000 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenForrest < 2500 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenBagest > 1000 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenBagest < 2500 | STATS max_front_track = MAX(KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenForrest)",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Widest Car Front Track (mm)",
+      "type": "stat",
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "unit": "lengthmm"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 20,
+        "y": 0
+      },
+      "id": 5,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenForrest > 1000 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenForrest < 2500 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenBagest > 1000 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenBagest < 2500 | STATS min_front_track = MIN(KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenForrest)",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Narrowest Car Front Track (mm)",
+      "type": "stat",
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 0,
+          "unit": "lengthmm"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 5
+      },
+      "id": 6,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND (\"${fuel}\" == \"All\" OR _drivkraft_primaer == \"${fuel}\") AND _foerste_registrering_aar IS NOT NULL AND _foerste_registrering_aar >= ${year_from} AND _foerste_registrering_aar <= ${year_to} AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenForrest > 1000 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenForrest < 2500 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenBagest > 1000 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenBagest < 2500 | EVAL decade = CASE(_foerste_registrering_aar < 1980, \"Before 1980\", _foerste_registrering_aar < 1990, \"1980s\", _foerste_registrering_aar < 2000, \"1990s\", _foerste_registrering_aar < 2010, \"2000s\", _foerste_registrering_aar < 2020, \"2010s\", \"2020s\") | STATS cars = COUNT(*), avg_front = AVG(KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenForrest), avg_rear = AVG(KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenBagest) BY decade | SORT decade ASC",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Avg Front + Rear Track by First Registration Decade",
+      "type": "barchart",
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 0,
+          "unit": "lengthmm"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 5
+      },
+      "id": 7,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND (\"${fuel}\" == \"All\" OR _drivkraft_primaer == \"${fuel}\") AND _foerste_registrering_aar IS NOT NULL AND _foerste_registrering_aar >= ${year_from} AND _foerste_registrering_aar <= ${year_to} AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenForrest > 1000 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenForrest < 2500 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenBagest > 1000 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenBagest < 2500 AND _foerste_registrering_aar >= 1960 | EVAL year_date = TO_DATETIME(CONCAT(TO_STRING(_foerste_registrering_aar), \"-01-01\")) | STATS avg_front_track = AVG(KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenForrest) BY year_date | SORT year_date ASC",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Avg Front Track by First Registration Year",
+      "type": "timeseries",
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 0,
+        "y": 14
+      },
+      "id": 8,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND (\"${fuel}\" == \"All\" OR _drivkraft_primaer == \"${fuel}\") AND _foerste_registrering_aar IS NOT NULL AND _foerste_registrering_aar >= ${year_from} AND _foerste_registrering_aar <= ${year_to} AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenForrest > 1000 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenForrest < 2500 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenBagest > 1000 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenBagest < 2500 | EVAL tier = CASE(KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenForrest < 1400, \"<1400 mm\", KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenForrest < 1500, \"1400-1499 mm\", KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenForrest < 1600, \"1500-1599 mm\", KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenForrest < 1700, \"1600-1699 mm\", \"1700+ mm\") | STATS cars = COUNT(*) BY tier | SORT cars DESC",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Track Width Distribution",
+      "type": "barchart",
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 0,
+          "unit": "lengthmm"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 8,
+        "y": 14
+      },
+      "id": 9,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenForrest > 1000 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenForrest < 2500 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenBagest > 1000 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenBagest < 2500 AND KoeretoejOplysningGrundStruktur.KarrosseriTypeStruktur.KarrosseriTypeNavn.keyword IS NOT NULL | STATS cars = COUNT(*), avg_front_track = AVG(KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenForrest) BY body_style = KoeretoejOplysningGrundStruktur.KarrosseriTypeStruktur.KarrosseriTypeNavn.keyword | WHERE cars >= 500 | SORT avg_front_track DESC | LIMIT 15",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Avg Track Width by Body Style",
+      "type": "barchart",
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 0,
+          "unit": "lengthmm"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 16,
+        "y": 14
+      },
+      "id": 10,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenForrest > 1000 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenForrest < 2500 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenBagest > 1000 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenBagest < 2500 AND _drivkraft_primaer IS NOT NULL | STATS cars = COUNT(*), avg_front_track = AVG(KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenForrest) BY fuel = _drivkraft_primaer | WHERE cars >= 100 | SORT avg_front_track DESC | LIMIT 10",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Avg Track Width by Fuel",
+      "type": "barchart",
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 0,
+        "y": 23
+      },
+      "id": 11,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenForrest > 1000 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenForrest < 2500 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenBagest > 1000 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenBagest < 2500 AND KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword IS NOT NULL | STATS cars = COUNT(*), avg_front_track = AVG(KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenForrest), max_front_track = MAX(KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenForrest) BY brand = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword | WHERE cars >= 200 | SORT avg_front_track DESC | LIMIT 25",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Widest Brands",
+      "type": "table",
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 8,
+        "y": 23
+      },
+      "id": 12,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenForrest > 1000 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenForrest < 2500 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenBagest > 1000 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenBagest < 2500 AND KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword IS NOT NULL | STATS cars = COUNT(*), avg_front_track = AVG(KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenForrest) BY brand = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword | WHERE cars >= 200 | SORT avg_front_track ASC | LIMIT 25",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Narrowest Brands",
+      "type": "table",
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 16,
+        "y": 23
+      },
+      "id": 13,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenForrest > 1000 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenForrest < 2500 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenBagest > 1000 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenBagest < 2500 AND KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword IS NOT NULL | EVAL diff = KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenForrest - KoeretoejOplysningGrundStruktur.KoeretoejOplysningSporviddenBagest | STATS cars = COUNT(*), avg_diff_mm = AVG(diff), max_diff_mm = MAX(diff) BY brand = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword | WHERE cars >= 200 | SORT avg_diff_mm DESC | LIMIT 25",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Track Width Asymmetry (Front − Rear)",
+      "type": "table",
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      }
+    }
+  ],
+  "refresh": "",
+  "schemaVersion": 41,
+  "style": "dark",
+  "tags": [
+    "dmr",
+    "elasticsearch"
+  ],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": true,
+          "text": "All",
+          "value": "All"
+        },
+        "hide": 0,
+        "label": "Fuel",
+        "name": "fuel",
+        "options": [
+          {
+            "selected": true,
+            "text": "All",
+            "value": "All"
+          },
+          {
+            "selected": false,
+            "text": "El",
+            "value": "El"
+          },
+          {
+            "selected": false,
+            "text": "Benzin",
+            "value": "Benzin"
+          },
+          {
+            "selected": false,
+            "text": "Diesel",
+            "value": "Diesel"
+          },
+          {
+            "selected": false,
+            "text": "Plugin hybrid",
+            "value": "Plugin hybrid"
+          },
+          {
+            "selected": false,
+            "text": "Hybrid",
+            "value": "Hybrid"
+          }
+        ],
+        "query": "All,El,Benzin,Diesel,Plugin hybrid,Hybrid",
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "1900",
+          "value": "1900"
+        },
+        "hide": 0,
+        "label": "First registration from",
+        "name": "year_from",
+        "options": [
+          {
+            "selected": true,
+            "text": "1900",
+            "value": "1900"
+          }
+        ],
+        "query": "1900",
+        "type": "textbox"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "2026",
+          "value": "2026"
+        },
+        "hide": 0,
+        "label": "First registration to",
+        "name": "year_to",
+        "options": [
+          {
+            "selected": true,
+            "text": "2026",
+            "value": "2026"
+          }
+        ],
+        "query": "2026",
+        "type": "textbox"
+      }
+    ]
+  },
+  "time": {
+    "from": "1900-01-01T00:00:00Z",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "DMR Track Width Creep",
+  "uid": "dmr-track-width-creep",
+  "version": 1,
+  "weekStart": ""
+}

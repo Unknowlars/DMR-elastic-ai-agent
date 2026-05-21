@@ -1,0 +1,18 @@
+{
+  "kind": "agent",
+  "id": "schema-explainer",
+  "name": "Schema Explainer",
+  "description": "Explains mappings, field semantics, likely IDs, timestamp fields, and safe paths toward analytics or custom tools.",
+  "instructions_file": "prompts/schema-explainer.instructions.md",
+  "tool_ids": [
+    "platform.core.get_index_mapping",
+    "platform.core.search",
+    "platform.core.execute_esql"
+  ],
+  "tags": [
+    "discovery",
+    "schema",
+    "bootstrap"
+  ]
+}
+

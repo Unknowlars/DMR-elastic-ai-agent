@@ -1,0 +1,11 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-grey-trend",
+  "type": "esql",
+  "description": "Percentage of registered passenger cars in boring colours (grey, black, white) versus colourful colours by registration decade since 1990. Use for 'are cars getting more boring', 'why are all cars grey', 'colour trends over time', or 'grayification of Danish cars'. Excludes unknown/unrecorded colour entries. Grey = Grå, black = Sort, white = Hvid in Danish registry.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND _foerste_registrering_aar >= 1990 AND _foerste_registrering_aar <= DATE_EXTRACT(\"year\", NOW()) AND KoeretoejOplysningGrundStruktur.KoeretoejFarveStruktur.FarveTypeStruktur.FarveTypeNavn.keyword IS NOT NULL AND KoeretoejOplysningGrundStruktur.KoeretoejFarveStruktur.FarveTypeStruktur.FarveTypeNavn.keyword != \"Ukendt\" | EVAL decade = CASE(_foerste_registrering_aar < 2000, \"1990s\", _foerste_registrering_aar < 2010, \"2000s\", _foerste_registrering_aar < 2020, \"2010s\", \"2020s\"), colour = KoeretoejOplysningGrundStruktur.KoeretoejFarveStruktur.FarveTypeStruktur.FarveTypeNavn.keyword | STATS total = COUNT(*), boring_count = COUNT(*) WHERE colour == \"Grå\" OR colour == \"Sort\" OR colour == \"Hvid\", grey_count = COUNT(*) WHERE colour == \"Grå\", black_count = COUNT(*) WHERE colour == \"Sort\", white_count = COUNT(*) WHERE colour == \"Hvid\" BY decade | EVAL boring_pct = ROUND(boring_count * 100.0 / total, 1), grey_pct = ROUND(grey_count * 100.0 / total, 1), colourful_pct = ROUND((total - boring_count) * 100.0 / total, 1) | SORT decade ASC | LIMIT 10",
+    "params": {}
+  },
+  "tags": ["domain", "dmr", "analytics"]
+}

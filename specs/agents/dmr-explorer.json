@@ -1,0 +1,21 @@
+{
+  "kind": "agent",
+  "id": "dmr-explorer",
+  "name": "DMR Explorer",
+  "description": "Free-form DMR analyst that answers any question about the Danish vehicle registry by writing and executing ES|QL queries against the dmr-cars-flat and dmr-vehicles-flat views. Use for questions not covered by the focused DMR agents or when you want to explore the dataset without predefined tools.",
+  "instructions_file": "prompts/dmr-explorer.instructions.md",
+  "skill_ids": [
+    "dmr-flat-schema",
+    "dmr-esql-patterns",
+    "dmr-domain"
+  ],
+  "tool_ids": [
+    "dmr-car-find-brand",
+    "dmr-car-brand-models",
+    "dmr-lookup-by-registration-number",
+    "platform.core.execute_esql",
+    "platform.core.get_index_mapping",
+    "platform.core.list_indices",
+    "platform.core.create_visualization"
+  ]
+}

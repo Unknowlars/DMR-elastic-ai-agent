@@ -1,0 +1,16 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-find-brand",
+  "type": "esql",
+  "description": "Discovers the exact registry name for a car brand when the user's input might not match exactly. Use when you are unsure of the exact stored brand name — especially for brands with non-obvious registry names (Alfa Romeo stored as ALFA, Mercedes stored as MERCEDES-BENZ). Returns all matching brand names with their car counts. After finding the exact brand name, use dmr-car-brand-models to list models.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" | STATS count = COUNT(*) BY brand = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword | WHERE brand RLIKE ?brand_pattern AND count >= 5 AND brand IS NOT NULL | SORT count DESC | LIMIT 20",
+    "params": {
+      "brand_pattern": {
+        "type": "string",
+        "description": "Case-insensitive regex pattern to find matching brand names. Examples: (?i).*alfa.* to find Alfa Romeo, (?i).*mercedes.* to find MERCEDES-BENZ, (?i).*rover.* to find LAND ROVER, (?i).*polestar.* to find Polestar."
+      }
+    }
+  },
+  "tags": ["domain", "dmr", "analytics"]
+}

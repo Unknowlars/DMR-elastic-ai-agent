@@ -1,0 +1,21 @@
+{
+  "kind": "tool",
+  "id": "dmr-lookup-permits-by-registration-number",
+  "type": "esql",
+  "description": "Looks up permit, exemption, and coupling-permission fields for one exact Danish registration number. Use when a user asks whether a vehicle has special permits, coupling permissions, dispensation, taxi/rental/special-use approvals, or permit dates/comments.",
+  "configuration": {
+    "query": "FROM dmr-vehicles-flat | WHERE plate == ?registration_number | KEEP plate, vehicle_id, brand, model, vehicle_category, usage, permit_type, permit_start_date, permit_end_date, permit_comment | LIMIT 10",
+    "params": {
+      "registration_number": {
+        "type": "string",
+        "description": "Exact Danish registration number, for example EN44360"
+      }
+    }
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "lookup",
+    "permits"
+  ]
+}

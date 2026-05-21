@@ -1,0 +1,15 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-inspection-summary",
+  "type": "esql",
+  "description": "Summarizes inspection-result values on current registered passenger-car records. Use for overall approval outcome distribution. For brand pass rates use dmr-car-inspection-pass-rate-by-brand; for age bands use dmr-car-inspection-by-age.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND SynResultatStruktur.SynResultatSynsResultat.keyword IS NOT NULL | STATS vehicle_count = COUNT(*) BY inspection_result = SynResultatStruktur.SynResultatSynsResultat.keyword | SORT vehicle_count DESC | LIMIT 10",
+    "params": {}
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

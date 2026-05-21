@@ -1,0 +1,21 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-red-electric-high-power-count",
+  "type": "esql",
+  "description": "Counts registered passenger cars that are red, electric, and above a kW threshold. Use for red electric high-power count questions.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KoeretoejFarveStruktur.FarveTypeStruktur.FarveTypeNavn.keyword == \"R\u00f8d\" AND _drivkraft_primaer == \"El\" | EVAL power_kw = KoeretoejOplysningGrundStruktur.KoeretoejMotorStruktur.KoeretoejMotorStoersteEffekt | WHERE power_kw > ?min_power_kw AND power_kw <= 750 | STATS car_count = COUNT(*), avg_power_kw = AVG(power_kw), max_power_kw = MAX(power_kw) | LIMIT 1",
+    "params": {
+      "min_power_kw": {
+        "type": "integer",
+        "description": "Minimum motor power in kW, e.g. 300.",
+        "default": 300
+      }
+    }
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

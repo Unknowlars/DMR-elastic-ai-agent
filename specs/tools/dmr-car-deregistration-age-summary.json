@@ -1,0 +1,11 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-deregistration-age-summary",
+  "type": "esql",
+  "description": "Summarizes the age at which registered passenger cars were deregistered using the status date minus first registration year. Returns average, median, and percentile ages at deregistration. Caveat: status date is not a complete lifecycle event log — it shows the current non-registered status date only.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Afmeldt\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND _foerste_registrering_aar IS NOT NULL AND _foerste_registrering_aar >= 1900 AND _foerste_registrering_aar <= DATE_EXTRACT(\"year\", NOW()) AND KoeretoejRegistreringStatusDato IS NOT NULL | EVAL dereg_year = DATE_EXTRACT(\"year\", KoeretoejRegistreringStatusDato), age_at_dereg = dereg_year - _foerste_registrering_aar | WHERE age_at_dereg >= 0 AND age_at_dereg <= 80 | STATS deregistered_cars = COUNT(*), avg_age_at_dereg = ROUND(AVG(age_at_dereg), 1), p10_age = PERCENTILE(age_at_dereg, 10), p50_age = PERCENTILE(age_at_dereg, 50), p90_age = PERCENTILE(age_at_dereg, 90) | LIMIT 1",
+    "params": {}
+  },
+  "tags": ["domain", "dmr", "analytics", "historical"]
+}

@@ -1,0 +1,20 @@
+{
+  "kind": "tool",
+  "id": "dmr-lookup-by-vin",
+  "type": "esql",
+  "description": "Looks up one vehicle by exact VIN/chassis number (stelnummer). Use when user provides a VIN and wants the matched vehicle record.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejOplysningGrundStruktur.KoeretoejOplysningStelNummer.keyword == ?vin | KEEP RegistreringNummerNummer, KoeretoejIdent, KoeretoejArtNavn, KoeretoejRegistreringStatus, KoeretoejRegistreringStatusDato, KoeretoejOplysningGrundStruktur.KoeretoejOplysningFoersteRegistreringDato, KoeretoejOplysningGrundStruktur.KoeretoejOplysningStelNummer, KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn, KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.Model.KoeretoejModelTypeNavn, KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.Variant.KoeretoejVariantTypeNavn, KoeretoejOplysningGrundStruktur.KarrosseriTypeStruktur.KarrosseriTypeNavn, _drivkraft_primaer, _co2_g_per_km_primaer, _km_per_liter_primaer | LIMIT 5",
+    "params": {
+      "vin": {
+        "type": "string",
+        "description": "Exact vehicle VIN or chassis number"
+      }
+    }
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "lookup"
+  ]
+}

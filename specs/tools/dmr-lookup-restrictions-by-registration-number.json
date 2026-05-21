@@ -1,0 +1,21 @@
+{
+  "kind": "tool",
+  "id": "dmr-lookup-restrictions-by-registration-number",
+  "type": "esql",
+  "description": "Looks up administrative blocking or restriction reason fields for one exact Danish registration number. Use when a user asks whether a vehicle is blocked, restricted, or has a registry blocking reason.",
+  "configuration": {
+    "query": "FROM dmr-vehicles-flat | WHERE plate == ?registration_number | KEEP plate, vehicle_id, brand, model, vehicle_category, registration_status_date, blocking_reason | LIMIT 10",
+    "params": {
+      "registration_number": {
+        "type": "string",
+        "description": "Exact Danish registration number, for example EN44360"
+      }
+    }
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "lookup",
+    "restrictions"
+  ]
+}

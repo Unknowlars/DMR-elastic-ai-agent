@@ -1,0 +1,683 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "All-status passenger-car history, survivorship, veteran cars, oldest/newest brands, deregistration trends, and historical long-tail brands.",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [
+    {
+      "asDropdown": true,
+      "includeVars": true,
+      "keepTime": true,
+      "tags": [
+        "dmr"
+      ],
+      "targetBlank": false,
+      "title": "DMR dashboard suite",
+      "type": "dashboards"
+    }
+  ],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 5,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejArtNavn.keyword == \"Personbil\" | STATS passenger_car_records_all_statuses = COUNT(*)",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "All Passenger-Car Records",
+      "type": "stat",
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 5,
+        "x": 5,
+        "y": 0
+      },
+      "id": 2,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" | STATS veteran_registered_cars = COUNT(*) WHERE KoeretoejOplysningGrundStruktur.KoeretoejOplysningVeteranKoeretoejOriginal == true",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Registered Veteran Passenger Cars",
+      "type": "stat",
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 5,
+        "x": 10,
+        "y": 0
+      },
+      "id": 3,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND _foerste_registrering_aar >= 1900 AND _foerste_registrering_aar <= DATE_EXTRACT(\"year\", NOW()) | STATS oldest_registered_first_year = MIN(_foerste_registrering_aar)",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Oldest Registered First Year",
+      "type": "stat",
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 5,
+        "x": 15,
+        "y": 0
+      },
+      "id": 4,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" | STATS invalid_or_missing_registration_year = COUNT(*) WHERE _foerste_registrering_aar IS NULL OR _foerste_registrering_aar < 1900 OR _foerste_registrering_aar > DATE_EXTRACT(\"year\", NOW())",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Invalid or Missing Registration Year",
+      "type": "stat",
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 20,
+        "y": 0
+      },
+      "id": 5,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" | STATS unknown_colour = COUNT(*) WHERE KoeretoejOplysningGrundStruktur.KoeretoejFarveStruktur.FarveTypeStruktur.FarveTypeNavn.keyword == \"Ukendt\"",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Unknown Colour",
+      "type": "stat",
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 5
+      },
+      "id": 6,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejArtNavn.keyword == \"Personbil\" AND _foerste_registrering_aar IS NOT NULL AND _foerste_registrering_aar >= ${year_from} AND _foerste_registrering_aar <= ${year_to} | EVAL year_date = TO_DATETIME(CONCAT(TO_STRING(_foerste_registrering_aar), \"-01-01\")) | STATS passenger_car_records = COUNT(*) BY year_date | SORT year_date ASC",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Passenger-Car Records by First Registration Year (All Statuses)",
+      "type": "timeseries",
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 1,
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 5
+      },
+      "id": 7,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejArtNavn.keyword == \"Personbil\" AND _foerste_registrering_aar IS NOT NULL AND _foerste_registrering_aar >= ${year_from} AND _foerste_registrering_aar <= ${year_to} | EVAL decade = CASE(_foerste_registrering_aar < 1950, \"Before 1950\", _foerste_registrering_aar < 1960, \"1950s\", _foerste_registrering_aar < 1970, \"1960s\", _foerste_registrering_aar < 1980, \"1970s\", _foerste_registrering_aar < 1990, \"1980s\", _foerste_registrering_aar < 2000, \"1990s\", _foerste_registrering_aar < 2010, \"2000s\", _foerste_registrering_aar < 2020, \"2010s\", \"2020s\") | STATS all_time = COUNT(*), currently_registered = COUNT(*) WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" BY decade | EVAL survival_pct = ROUND(currently_registered * 100.0 / all_time, 1) | SORT decade ASC | LIMIT 20",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Current Survivorship by Decade (All Passenger-Car Statuses)",
+      "type": "barchart",
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 0,
+        "y": 14
+      },
+      "id": 8,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND _foerste_registrering_aar IS NOT NULL AND _foerste_registrering_aar >= ${year_from} AND _foerste_registrering_aar <= ${year_to} | EVAL decade = CASE(_foerste_registrering_aar < 1950, \"Before 1950\", _foerste_registrering_aar < 1960, \"1950s\", _foerste_registrering_aar < 1970, \"1960s\", _foerste_registrering_aar < 1980, \"1970s\", _foerste_registrering_aar < 1990, \"1980s\", _foerste_registrering_aar < 2000, \"1990s\", _foerste_registrering_aar < 2010, \"2000s\", _foerste_registrering_aar < 2020, \"2010s\", \"2020s\") | STATS cars = COUNT(*) BY decade | SORT decade ASC",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Current Registered Fleet by First Registration Decade",
+      "type": "barchart",
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 8,
+        "y": 14
+      },
+      "id": 9,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningVeteranKoeretoejOriginal == true AND KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword IS NOT NULL | STATS cars = COUNT(*) BY brand = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword | SORT cars DESC | LIMIT 15",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Veteran Cars by Brand",
+      "type": "barchart",
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 16,
+        "y": 14
+      },
+      "id": 10,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejRegistreringStatus.keyword == \"Afmeldt\" AND KoeretoejRegistreringStatusDato IS NOT NULL | EVAL dereg_year = DATE_EXTRACT(\"year\", KoeretoejRegistreringStatusDato) | WHERE dereg_year >= 1990 AND dereg_year <= DATE_EXTRACT(\"year\", NOW()) | EVAL year_date = TO_DATETIME(CONCAT(TO_STRING(dereg_year), \"-01-01\")) | STATS deregistered_cars = COUNT(*) BY year_date | SORT year_date ASC",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Deregistered Passenger Cars by Year",
+      "type": "timeseries",
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 0,
+        "y": 23
+      },
+      "id": 11,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword IS NOT NULL AND _foerste_registrering_aar IS NOT NULL | STATS current_count = COUNT(*), oldest_first_registration_year = MIN(_foerste_registrering_aar), avg_first_registration_year = AVG(_foerste_registrering_aar) BY brand = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword | WHERE current_count >= 5 | SORT oldest_first_registration_year ASC | LIMIT 30",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Oldest Current Brands",
+      "type": "table",
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 8,
+        "y": 23
+      },
+      "id": 12,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword IS NOT NULL | STATS first_registered_year = MIN(_foerste_registrering_aar), current_count = COUNT(*) WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\", all_time_count = COUNT(*) BY brand = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword | WHERE current_count >= 5 AND first_registered_year IS NOT NULL | SORT first_registered_year DESC | LIMIT 30",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Newest Current Brands",
+      "type": "table",
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 16,
+        "y": 23
+      },
+      "id": 13,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword IS NOT NULL | STATS all_time = COUNT(*), current = COUNT(*) WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" BY brand = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword | EVAL gone_pct = ROUND((all_time - current) * 100.0 / all_time, 1) | WHERE all_time >= 5000 AND gone_pct >= 90 | SORT all_time DESC | LIMIT 30",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Forgotten Brands (All Passenger-Car Statuses)",
+      "type": "table",
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      }
+    }
+  ],
+  "refresh": "",
+  "schemaVersion": 41,
+  "style": "dark",
+  "tags": [
+    "dmr",
+    "elasticsearch"
+  ],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "1900",
+          "value": "1900"
+        },
+        "hide": 0,
+        "label": "First registration from",
+        "name": "year_from",
+        "options": [
+          {
+            "selected": true,
+            "text": "1900",
+            "value": "1900"
+          }
+        ],
+        "query": "1900",
+        "type": "textbox"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "2026",
+          "value": "2026"
+        },
+        "hide": 0,
+        "label": "First registration to",
+        "name": "year_to",
+        "options": [
+          {
+            "selected": true,
+            "text": "2026",
+            "value": "2026"
+          }
+        ],
+        "query": "2026",
+        "type": "textbox"
+      }
+    ]
+  },
+  "time": {
+    "from": "1900-01-01T00:00:00Z",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "DMR History & Heritage",
+  "uid": "dmr-history-heritage",
+  "version": 1,
+  "weekStart": ""
+}

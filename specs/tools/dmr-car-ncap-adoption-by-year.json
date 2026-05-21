@@ -1,0 +1,16 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-ncap-adoption-by-year",
+  "type": "esql",
+  "description": "Returns NCAP data adoption by passenger-car registration year from 1995: total, NCAP-recorded count, and percentage. Use for NCAP trend or year-share questions. Registry type-approval record, not independent post-registration testing.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejArtNavn.keyword == \"Personbil\" AND _foerste_registrering_aar IS NOT NULL AND _foerste_registrering_aar >= 1995 AND _foerste_registrering_aar <= 2026 | STATS total = COUNT(*), ncap_tested = COUNT(*) WHERE KoeretoejOplysningGrundStruktur.KoeretoejOplysningNCAPTest == true BY registration_year = _foerste_registrering_aar | EVAL ncap_pct = ROUND(ncap_tested * 100.0 / total, 1) | SORT registration_year ASC | LIMIT 35",
+    "params": {}
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics",
+    "historical"
+  ]
+}

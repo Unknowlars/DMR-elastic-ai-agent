@@ -1,0 +1,15 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-fuel-age-summary",
+  "type": "esql",
+  "description": "Current passenger-car fleet by fuel type with avg age per fuel. Use when user asks current EV/petrol/diesel counts or share. For year-by-year trend use dmr-car-ev-adoption-trend.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND _drivkraft_primaer IS NOT NULL | EVAL first_registration_year_clean = CASE(_foerste_registrering_aar >= 1900 AND _foerste_registrering_aar <= DATE_EXTRACT(\"year\", NOW()), _foerste_registrering_aar, null) | STATS vehicle_count = COUNT(*), avg_first_registration_year = AVG(first_registration_year_clean), avg_co2_g_per_km = AVG(_co2_g_per_km_primaer), avg_km_per_liter = AVG(_km_per_liter_primaer) BY fuel = _drivkraft_primaer | SORT vehicle_count DESC | LIMIT 10",
+    "params": {}
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

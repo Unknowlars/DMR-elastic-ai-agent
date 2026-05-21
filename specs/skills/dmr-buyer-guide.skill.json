@@ -1,0 +1,15 @@
+{
+  "kind": "skill",
+  "id": "dmr-buyer-guide",
+  "name": "DMR Buyer Guide",
+  "description": "Activate when a user asks buyer-oriented questions about practical suitability, family car selection, towing requirements, seat count needs, inspection implications, or interpreting DMR performance metrics as real-world driving experience.",
+  "content": "Load this skill when translating DMR statistics into practical buyer guidance. Anchor all advice in tool output — do not make purchase recommendations without data. Use the buyer-thresholds reference for interpreting power-to-weight, seat count, and inspection outcomes in plain language.",
+  "referenced_content": [
+    {
+      "name": "buyer-thresholds",
+      "relativePath": "./buyer-thresholds",
+      "content": "POWER-TO-WEIGHT GUIDE (kW/kg)\n0.04–0.06 = economy/city car feel\n0.06–0.10 = family car, adequate for motorways\n0.10–0.15 = sporty, confident overtaking\n0.15–0.20 = performance car\n0.20+ = supercar / track-oriented\n\nSEAT COUNT GUIDE\n2 seats = sports car or city two-seater\n4 seats = compact/coupe, not a family car\n5 seats = standard family baseline\n6–7 seats = large family or MPV use; verify 7th seat is a full seat not a child jump seat\n8+ seats = minibus / large van configuration\nNote: seat count from DMR is KoeretoejOplysningSiddepladserMinimum (minimum configuration). Some models have optional configurations.\n\nINSPECTION OUTCOMES FOR BUYERS\nGodkendt = fully approved, no action required\nKanGodkendesVedOmsynAf... = conditionally approved — specific defects must be corrected and re-inspected before full approval. Treat as a warning flag when buying used.\nIkkeGodkendt = failed inspection — vehicle has uncorrected defects. Significant risk for a used car purchase.\nNote: the stored inspection result is the most recent recorded result, not a complete history. A car can be re-inspected.\n\nTOWING SUITABILITY\nBraked towing capacity (Tilkoblingsvægt med bremser) is the relevant figure for caravans and trailers with their own brakes.\nTypical family caravan: 1200–1800 kg. Horse trailer: 2000–3500 kg. Rule of thumb: towing capacity should be at least 85% of the car's kerbweight for stable towing.\n\nCO2 / EMISSIONS FOR BUYERS\nPre-2017 CO2 figures use NEDC (lower, optimistic). Post-2017 use WLTP (higher, more realistic). Do not compare across the 2017 boundary.\nEuro 6 is the current standard. Euro 5 and below face increasing restriction in city low-emission zones.\n\nAWD / 4WD\nTraekkendeaksler = 2 means all-wheel drive. 1 means single driven axle (FWD or RWD).\nApprox 13.3% of Danish registered passenger cars are AWD."
+    }
+  ],
+  "tool_ids": []
+}

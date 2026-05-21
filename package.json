@@ -1,0 +1,23 @@
+{
+  "name": "elastic-agent-build-repo",
+  "private": false,
+  "type": "module",
+  "scripts": {
+    "validate:env": "node scripts/validate-env.mjs",
+    "validate:specs": "node scripts/validate-specs.mjs",
+    "export:agent-builder": "node scripts/export-kibana-state.mjs",
+    "export:indices": "node scripts/export-index-inventory.mjs",
+    "sync:plan": "node scripts/render-sync-plan.mjs",
+    "sync:agent-builder": "node scripts/sync-agent-builder.mjs",
+    "agent-builder": "node scripts/agent-builder.mjs",
+    "dashboards": "node scripts/kibana-dashboards.mjs",
+    "esql": "node scripts/esql.mjs",
+    "create:views": "node scripts/create-esql-views.mjs",
+    "create:views:dry-run": "node scripts/create-esql-views.mjs --dry-run",
+    "create:views:flat": "node scripts/create-esql-views.mjs --flat-only",
+    "create:views:flat:dry-run": "node scripts/create-esql-views.mjs --flat-only --dry-run"
+  },
+  "dependencies": {
+    "@elastic/elasticsearch": "^9.3.4"
+  }
+}

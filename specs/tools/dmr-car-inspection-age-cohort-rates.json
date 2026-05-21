@@ -1,0 +1,11 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-inspection-age-cohort-rates",
+  "type": "esql",
+  "description": "Compares the most recent stored inspection outcomes for registered passenger cars split into three age bands: under 3 years, 3–8 years, and over 8 years. Uses live inspection outcome labels. Not a first-inspection history — reflects the latest stored inspection result per car.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND SynResultatStruktur.SynResultatSynsResultat.keyword IS NOT NULL AND _foerste_registrering_aar IS NOT NULL AND _foerste_registrering_aar >= 1900 AND _foerste_registrering_aar <= DATE_EXTRACT(\"year\", NOW()) | EVAL age = DATE_EXTRACT(\"year\", NOW()) - _foerste_registrering_aar, age_band = CASE(age < 3, \"Under 3 years\", age <= 8, \"3-8 years\", \"Over 8 years\"), result = SynResultatStruktur.SynResultatSynsResultat.keyword | STATS total = COUNT(*), approved = COUNT(*) WHERE result == \"Godkendt\", conditional = COUNT(*) WHERE result == \"KanGodkendesVedOmsynAfOmsynsvirksomhed\" OR result == \"KanGodkendesVedOmsynAfSynsvirksomhed\", not_approved = COUNT(*) WHERE result == \"IkkeGodkendt\" OR result == \"IkkeGodkendtKanGenfremstilles\" BY age_band | EVAL approved_pct = ROUND(approved * 100.0 / total, 1), conditional_pct = ROUND(conditional * 100.0 / total, 1), not_approved_pct = ROUND(not_approved * 100.0 / total, 1) | SORT age_band ASC | LIMIT 10",
+    "params": {}
+  },
+  "tags": ["domain", "dmr", "analytics"]
+}

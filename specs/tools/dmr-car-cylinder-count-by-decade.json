@@ -1,0 +1,16 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-cylinder-count-by-decade",
+  "type": "esql",
+  "description": "Historical cylinder-count distribution of passenger-car registrations by decade. Use when user asks about 3-cyl downsizing, V8/V6 share over time, or 0-cyl EV arrival. Historical view, not current snapshot.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejArtNavn.keyword == \"Personbil\" AND _foerste_registrering_aar IS NOT NULL AND _foerste_registrering_aar >= 1950 AND _foerste_registrering_aar <= 2026 AND KoeretoejOplysningGrundStruktur.KoeretoejMotorStruktur.KoeretoejMotorCylinderAntal IS NOT NULL AND KoeretoejOplysningGrundStruktur.KoeretoejMotorStruktur.KoeretoejMotorCylinderAntal >= 0 AND KoeretoejOplysningGrundStruktur.KoeretoejMotorStruktur.KoeretoejMotorCylinderAntal <= 16 | EVAL decade = CASE(_foerste_registrering_aar < 1960, \"1950s\", _foerste_registrering_aar < 1970, \"1960s\", _foerste_registrering_aar < 1980, \"1970s\", _foerste_registrering_aar < 1990, \"1980s\", _foerste_registrering_aar < 2000, \"1990s\", _foerste_registrering_aar < 2010, \"2000s\", _foerste_registrering_aar < 2020, \"2010s\", \"2020s\") | STATS car_count = COUNT(*) BY decade, cylinders = KoeretoejOplysningGrundStruktur.KoeretoejMotorStruktur.KoeretoejMotorCylinderAntal | SORT decade ASC, cylinders ASC | LIMIT 120",
+    "params": {}
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics",
+    "historical"
+  ]
+}

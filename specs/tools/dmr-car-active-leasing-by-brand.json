@@ -1,0 +1,15 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-active-leasing-by-brand",
+  "type": "esql",
+  "description": "Top passenger-car brands by count of cars with an ACTIVE leasing period today (LeasingGyldigFra <= now AND LeasingGyldigTil >= now). Returns count and share of that brand's currently-registered fleet. Use when user asks which brands lease most, or which brand has the highest leasing penetration today. For fleet-wide leasing penetration and fuel breakdown use dmr-car-leasing-summary.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword IS NOT NULL | EVAL is_leased_now = LeasingGyldigFra IS NOT NULL AND LeasingGyldigTil IS NOT NULL AND LeasingGyldigFra <= NOW() AND LeasingGyldigTil >= NOW() | STATS leased_count = COUNT(*) WHERE is_leased_now, total_count = COUNT(*) BY brand = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword | EVAL leased_share_pct = ROUND(leased_count * 100.0 / total_count, 1) | WHERE total_count >= 500 | SORT leased_count DESC | LIMIT 25",
+    "params": {}
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

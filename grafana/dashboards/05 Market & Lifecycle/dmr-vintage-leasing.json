@@ -1,0 +1,510 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "A 1966 car is currently on an active leasing contract in Denmark. So is one from 1970, 1972, and several from the late 1970s. Classic-car leasing companies in numbers.",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [
+    {
+      "asDropdown": true,
+      "includeVars": true,
+      "keepTime": true,
+      "tags": [
+        "dmr"
+      ],
+      "targetBlank": false,
+      "title": "DMR dashboard suite",
+      "type": "dashboards"
+    }
+  ],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND LeasingGyldigFra IS NOT NULL AND _foerste_registrering_aar < 2000 AND _foerste_registrering_aar >= 1900 | STATS vintage_leases = COUNT(*)",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Leased Cars First Registered Before 2000",
+      "type": "stat",
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 6,
+        "y": 0
+      },
+      "id": 2,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND LeasingGyldigFra IS NOT NULL AND _foerste_registrering_aar < 1990 AND _foerste_registrering_aar >= 1900 | STATS pre90_leases = COUNT(*)",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Leased Cars Before 1990",
+      "type": "stat",
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 12,
+        "y": 0
+      },
+      "id": 3,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND LeasingGyldigFra IS NOT NULL AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningVeteranKoeretoejOriginal == true | STATS veteran_leases = COUNT(*)",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Leased Veteran Cars (Flag = True)",
+      "type": "stat",
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 18,
+        "y": 0
+      },
+      "id": 4,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND LeasingGyldigFra IS NOT NULL AND _foerste_registrering_aar >= 1900 | STATS oldest_year = MIN(_foerste_registrering_aar)",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Oldest Leased Car (Registration Year)",
+      "type": "stat",
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 5
+      },
+      "id": 5,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND LeasingGyldigFra IS NOT NULL AND _foerste_registrering_aar >= 1960 AND _foerste_registrering_aar < 2010 | EVAL year_date = TO_DATETIME(CONCAT(TO_STRING(_foerste_registrering_aar), \"-01-01\")) | STATS leased_cars = COUNT(*) BY year_date | SORT year_date ASC",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Leased Cars by First Registration Year (pre-2010)",
+      "type": "timeseries",
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 5
+      },
+      "id": 6,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND LeasingGyldigFra IS NOT NULL AND _foerste_registrering_aar >= 1900 AND _foerste_registrering_aar < 2010 | EVAL decade = CASE(_foerste_registrering_aar < 1970, \"Before 1970\", _foerste_registrering_aar < 1980, \"1970s\", _foerste_registrering_aar < 1990, \"1980s\", _foerste_registrering_aar < 2000, \"1990s\", \"2000s\") | STATS cars = COUNT(*) BY decade | SORT decade ASC",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Vintage-Leased Cars by Decade",
+      "type": "barchart",
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 14
+      },
+      "id": 7,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND LeasingGyldigFra IS NOT NULL AND _foerste_registrering_aar < 2000 AND _foerste_registrering_aar >= 1900 AND KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword IS NOT NULL | STATS cars = COUNT(*) BY brand = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword | SORT cars DESC | LIMIT 20",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Vintage-Leased Cars by Brand",
+      "type": "barchart",
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 14
+      },
+      "id": 8,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND LeasingGyldigFra IS NOT NULL AND _foerste_registrering_aar < 2000 AND _foerste_registrering_aar >= 1900 AND KoeretoejOplysningGrundStruktur.KarrosseriTypeStruktur.KarrosseriTypeNavn.keyword IS NOT NULL | STATS cars = COUNT(*) BY body_style = KoeretoejOplysningGrundStruktur.KarrosseriTypeStruktur.KarrosseriTypeNavn.keyword | SORT cars DESC | LIMIT 12",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Vintage-Leased Body Mix",
+      "type": "barchart",
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 23
+      },
+      "id": 9,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND LeasingGyldigFra IS NOT NULL AND _foerste_registrering_aar >= 1900 AND _foerste_registrering_aar < 2000 AND KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword IS NOT NULL AND KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.Model.KoeretoejModelTypeNavn.keyword IS NOT NULL | STATS cars = COUNT(*), oldest_year = MIN(_foerste_registrering_aar) BY brand = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword, model = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.Model.KoeretoejModelTypeNavn.keyword | SORT oldest_year ASC | LIMIT 30",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Oldest Leased Cars (Year + Brand + Model)",
+      "type": "table",
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 23
+      },
+      "id": 10,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND _foerste_registrering_aar >= 1960 AND _foerste_registrering_aar <= 2025 | EVAL decade = CASE(_foerste_registrering_aar < 1970, \"1960s\", _foerste_registrering_aar < 1980, \"1970s\", _foerste_registrering_aar < 1990, \"1980s\", _foerste_registrering_aar < 2000, \"1990s\", _foerste_registrering_aar < 2010, \"2000s\", _foerste_registrering_aar < 2020, \"2010s\", \"2020s\") | STATS total = COUNT(*), leased = COUNT(*) WHERE LeasingGyldigFra IS NOT NULL BY decade | EVAL leased_pct = ROUND(leased * 100.0 / total, 1) | SORT decade ASC",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Leasing Share by Registration Decade",
+      "type": "table",
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      }
+    }
+  ],
+  "refresh": "",
+  "schemaVersion": 41,
+  "style": "dark",
+  "tags": [
+    "dmr",
+    "elasticsearch"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "1900-01-01T00:00:00Z",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "DMR Vintage Leasing",
+  "uid": "dmr-vintage-leasing",
+  "version": 1,
+  "weekStart": ""
+}

@@ -1,0 +1,11 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-ev-brand-ranking",
+  "type": "esql",
+  "description": "Ranks passenger-car brands by the percentage of their current Danish fleet that is fully electric (El). Use for 'which brands are most electric', 'who is leading the EV transition in Denmark', 'what percentage of Teslas/Volkswagens/BMWs are electric', or 'which brands have gone most electric'. Requires at least 500 total current cars per brand.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" | STATS total_cars = COUNT(*), ev_cars = COUNT(*) WHERE _drivkraft_primaer == \"El\" BY brand = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword | WHERE total_cars >= 500 AND ev_cars >= 50 AND brand IS NOT NULL | EVAL ev_share_pct = ROUND(ev_cars * 100.0 / total_cars, 1) | SORT ev_share_pct DESC | LIMIT 25",
+    "params": {}
+  },
+  "tags": ["domain", "dmr", "analytics"]
+}

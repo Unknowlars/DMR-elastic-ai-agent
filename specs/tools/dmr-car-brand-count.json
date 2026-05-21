@@ -1,0 +1,20 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-brand-count",
+  "type": "esql",
+  "description": "Counts registered passenger cars matching a brand LIKE pattern. Use when user names a specific brand (Ferrari, Tesla, Pagani). Empty result = no registry match. Rankings: dmr-car-top-brands.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword IS NOT NULL | WHERE KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword LIKE ?brand_pattern | STATS car_count = COUNT(*) BY brand = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword | SORT car_count DESC | LIMIT 20",
+    "params": {
+      "brand_pattern": {
+        "type": "string",
+        "description": "Brand LIKE pattern, e.g. Ferrari, *Ferrari*, Pagani, or *Tesla*."
+      }
+    }
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

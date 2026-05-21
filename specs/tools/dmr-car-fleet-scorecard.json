@@ -1,0 +1,15 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-fleet-scorecard",
+  "type": "esql",
+  "description": "One-row headline scorecard: total, oldest/newest year, veterans, NCAP, leases, AWD, EVs, hydrogen, accident flags. Use when user asks oldest car, hydrogen count, or broad overview facts.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" | STATS total_registered_cars = COUNT(*), oldest_registration_year = MIN(_foerste_registrering_aar), newest_registration_year = MAX(_foerste_registrering_aar), veteran_cars = COUNT(*) WHERE KoeretoejOplysningGrundStruktur.KoeretoejOplysningVeteranKoeretoejOriginal == true, ncap_tested_cars = COUNT(*) WHERE KoeretoejOplysningGrundStruktur.KoeretoejOplysningNCAPTest == true, cars_on_active_lease = COUNT(*) WHERE LeasingGyldigFra IS NOT NULL, awd_cars = COUNT(*) WHERE KoeretoejOplysningGrundStruktur.KoeretoejOplysningTraekkendeAkslerListe == 2, electric_cars = COUNT(*) WHERE _drivkraft_primaer == \"El\", hydrogen_cars = COUNT(*) WHERE _drivkraft_primaer == \"Brint\", accident_damaged_cars = COUNT(*) WHERE KoeretoejOplysningGrundStruktur.KoeretoejOplysningTrafikskade == true | LIMIT 1",
+    "params": {}
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

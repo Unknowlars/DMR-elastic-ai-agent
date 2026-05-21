@@ -1,0 +1,20 @@
+{
+  "kind": "dataset-catalog",
+  "dataset_id": "replace-me",
+  "index_patterns": [
+    "replace-me-*"
+  ],
+  "purpose": "What this dataset represents and why it exists.",
+  "owner": "team-or-person",
+  "time_field": "@timestamp",
+  "key_fields": [
+    "service.name",
+    "event.dataset"
+  ],
+  "sensitive_fields": [],
+  "notes": [
+    "Add field semantics, known constraints, and query tips here."
+  ],
+  "status": "draft"
+}
+

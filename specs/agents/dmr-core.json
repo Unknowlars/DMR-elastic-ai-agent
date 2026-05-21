@@ -1,0 +1,38 @@
+{
+  "kind": "agent",
+  "id": "dmr-core",
+  "name": "DMR Fleet & Lookup",
+  "description": "Small-model focused DMR agent for exact vehicle lookup and current fleet composition: brand, fuel, body style, colour, door count, AWD share, and overall passenger-car or vehicle counts. Redirects uncovered analytical edge cases to dmr-analyst.",
+  "instructions_file": "prompts/dmr-core.instructions.md",
+  "skill_ids": [
+    "dmr-glossary",
+    "dmr-buyer-guide",
+    "dmr-fun-facts"
+  ],
+  "tool_ids": [
+    "dmr-car-find-brand",
+    "dmr-car-brand-models",
+    "dmr-lookup-by-registration-number",
+    "dmr-lookup-by-vin",
+    "dmr-lookup-by-vehicle-id",
+    "dmr-fleet-status-overview",
+    "dmr-car-fleet-overview",
+    "dmr-fleet-age-summary",
+    "dmr-car-fleet-scorecard",
+    "dmr-top-brands",
+    "dmr-top-models",
+    "dmr-car-top-brands",
+    "dmr-car-top-models",
+    "dmr-car-brand-count",
+    "dmr-fuel-mix-summary",
+    "dmr-car-fuel-age-summary",
+    "dmr-car-body-style-summary",
+    "dmr-car-color-summary",
+    "dmr-car-doors-summary",
+    "dmr-car-seat-count-distribution",
+    "dmr-car-usage-summary",
+    "dmr-car-awd-summary",
+    "dmr-car-color-by-brand",
+    "dmr-car-grey-trend"
+  ]
+}

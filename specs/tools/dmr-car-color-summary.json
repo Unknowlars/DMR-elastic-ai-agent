@@ -1,0 +1,15 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-color-summary",
+  "type": "esql",
+  "description": "Top exterior colors of currently registered passenger cars. Use when user asks popular car colors, count of red/white/black cars. 'Ukendt' means unknown/not recorded.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KoeretoejFarveStruktur.FarveTypeStruktur.FarveTypeNavn.keyword IS NOT NULL | STATS car_count = COUNT(*) BY color = KoeretoejOplysningGrundStruktur.KoeretoejFarveStruktur.FarveTypeStruktur.FarveTypeNavn.keyword | SORT car_count DESC | LIMIT 15",
+    "params": {}
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

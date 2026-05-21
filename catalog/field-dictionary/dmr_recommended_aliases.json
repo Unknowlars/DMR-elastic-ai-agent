@@ -1,0 +1,18 @@
+{
+  "brand": "KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword",
+  "model": "KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.Model.KoeretoejModelTypeNavn.keyword",
+  "vehicle_type": "KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.Type.KoeretoejTypeTypeNavn.keyword",
+  "variant": "KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.Variant.KoeretoejVariantTypeNavn.keyword",
+  "vehicle_category": "KoeretoejArtNavn.keyword",
+  "registration_status": "KoeretoejRegistreringStatus.keyword",
+  "fuel": "_drivkraft_primaer",
+  "first_registration_year": "_foerste_registrering_aar",
+  "power_kw": "KoeretoejOplysningGrundStruktur.KoeretoejMotorStruktur.KoeretoejMotorStoersteEffekt",
+  "co2_g_per_km": "_co2_g_per_km_primaer",
+  "km_per_liter": "_km_per_liter_primaer",
+  "body_type": "KoeretoejOplysningGrundStruktur.KarrosseriTypeStruktur.KarrosseriTypeNavn.keyword",
+  "colour": "KoeretoejOplysningGrundStruktur.KoeretoejFarveStruktur.FarveTypeStruktur.FarveTypeNavn.keyword",
+  "inspection_result": "SynResultatStruktur.SynResultatSynsResultat.keyword",
+  "inspection_date": "SynResultatStruktur.SynResultatSynsDato",
+  "odometer_km": "SynResultatStruktur.KoeretoejMotorKilometerstand"
+}

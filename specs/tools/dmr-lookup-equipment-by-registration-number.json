@@ -1,0 +1,21 @@
+{
+  "kind": "tool",
+  "id": "dmr-lookup-equipment-by-registration-number",
+  "type": "esql",
+  "description": "Looks up tyres, optional equipment, noise levels, and type-approval flags for one exact Danish registration number. Use when a user asks about a specific car's equipment, options, tyres/rims, noise readings, NCAP testing, or particle filter status.",
+  "configuration": {
+    "query": "FROM dmr-cars-flat | WHERE plate == ?registration_number | KEEP plate, brand, model, variant, tyres_rims, other_equipment, standing_noise_db, driving_noise_db, standing_noise_rpm, particle_filter, ncap_tested, taxi_suitable | LIMIT 5",
+    "params": {
+      "registration_number": {
+        "type": "string",
+        "description": "Exact Danish registration number, for example EN44360"
+      }
+    }
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "lookup",
+    "equipment"
+  ]
+}

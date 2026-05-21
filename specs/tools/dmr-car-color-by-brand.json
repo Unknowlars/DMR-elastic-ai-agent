@@ -1,0 +1,16 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-color-by-brand",
+  "type": "esql",
+  "description": "Top exterior colours for a specific registered passenger-car brand with count and percentage share. Use when user asks what colour a specific brand tends to be — 'most popular Tesla colour', 'what colour are BMWs in Denmark', 'do Danes buy red Ferraris'. Brand param is the exact uppercase registry name (TESLA, VOLKSWAGEN, BMW, TOYOTA, PORSCHE, etc.). Excludes Ukendt (unknown/unrecorded) colour entries.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword == ?brand AND KoeretoejOplysningGrundStruktur.KoeretoejFarveStruktur.FarveTypeStruktur.FarveTypeNavn.keyword IS NOT NULL AND KoeretoejOplysningGrundStruktur.KoeretoejFarveStruktur.FarveTypeStruktur.FarveTypeNavn.keyword != \"Ukendt\" | STATS car_count = COUNT(*) BY colour = KoeretoejOplysningGrundStruktur.KoeretoejFarveStruktur.FarveTypeStruktur.FarveTypeNavn.keyword | INLINE STATS total_brand_cars = SUM(car_count) | EVAL colour_pct = ROUND(car_count * 100.0 / total_brand_cars, 1) | SORT car_count DESC | LIMIT 10",
+    "params": {
+      "brand": {
+        "type": "string",
+        "description": "Exact uppercase brand name as stored in the registry, e.g. TESLA, VOLKSWAGEN, BMW, TOYOTA, PORSCHE, FORD, AUDI, MERCEDES-BENZ."
+      }
+    }
+  },
+  "tags": ["domain", "dmr", "analytics"]
+}

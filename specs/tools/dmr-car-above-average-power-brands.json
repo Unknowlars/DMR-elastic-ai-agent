@@ -1,0 +1,15 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-above-average-power-brands",
+  "type": "esql",
+  "description": "Brands with above-fleet-average power kW among registered passenger cars. Use when user asks which brands are most powerful or above average.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" | EVAL kw_clean = CLAMP(KoeretoejOplysningGrundStruktur.KoeretoejMotorStruktur.KoeretoejMotorStoersteEffekt, 1, 750) | STATS brand_avg_kw = AVG(kw_clean) BY brand = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword | INLINE STATS fleet_avg_kw = AVG(brand_avg_kw) | WHERE brand_avg_kw > fleet_avg_kw | SORT brand_avg_kw DESC | KEEP brand, brand_avg_kw, fleet_avg_kw | LIMIT 15",
+    "params": {}
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

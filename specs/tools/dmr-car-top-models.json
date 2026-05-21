@@ -1,0 +1,15 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-top-models",
+  "type": "esql",
+  "description": "Top brand+model combos among registered passenger cars. Use when user asks most popular car models. All-vehicle variant: dmr-top-models.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" | STATS car_count = COUNT(*) BY brand = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword, model = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.Model.KoeretoejModelTypeNavn.keyword | SORT car_count DESC | LIMIT 20",
+    "params": {}
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

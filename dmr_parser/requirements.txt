@@ -1,0 +1,2 @@
+elasticsearch>=8,<10
+smbprotocol>=1,<2

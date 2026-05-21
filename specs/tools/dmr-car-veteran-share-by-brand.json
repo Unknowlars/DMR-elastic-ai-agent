@@ -1,0 +1,11 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-veteran-share-by-brand",
+  "type": "esql",
+  "description": "Ranks brands by veteran-flagged passenger cars as a percentage of their current registered fleet. Based on the KoeretoejOplysningVeteranKoeretoejOriginal registry flag, not a derived age calculation. Requires at least 100 total current cars per brand. Use for which brands have the most veteran cars relative to their fleet.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" | STATS total_cars = COUNT(*), veteran_cars = COUNT(*) WHERE KoeretoejOplysningGrundStruktur.KoeretoejOplysningVeteranKoeretoejOriginal == TRUE BY brand = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword | WHERE total_cars >= 100 AND veteran_cars > 0 | EVAL veteran_share_pct = ROUND(veteran_cars * 100.0 / total_cars, 2) | SORT veteran_share_pct DESC | LIMIT 25",
+    "params": {}
+  },
+  "tags": ["domain", "dmr", "analytics", "historical"]
+}

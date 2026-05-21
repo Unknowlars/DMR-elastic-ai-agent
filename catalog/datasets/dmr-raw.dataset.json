@@ -1,0 +1,52 @@
+{
+  "kind": "dataset-catalog",
+  "dataset_id": "dmr-raw",
+  "index_patterns": [
+    "dmr-raw-*"
+  ],
+  "purpose": "Danish Motor Register vehicle registration and technical data. The dataset is intended for vehicle fleet analysis, Elasticsearch Agent Builder demonstrations, and examples that teach users how to import, query, and build agents over a real-world public registry-style dataset.",
+  "domain": "Danish Motor Register / Motorregistret",
+  "record_grain": "One document represents a vehicle registration or technical vehicle record, not a vehicle owner.",
+  "contains_personal_owner_data": false,
+  "time_field": "KoeretoejOplysningGrundStruktur.KoeretoejOplysningFoersteRegistreringDato",
+  "key_fields": [
+    "KoeretoejIdent",
+    "KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn",
+    "KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.Model.KoeretoejModelTypeNavn",
+    "KoeretoejArtNavn",
+    "KoeretoejRegistreringStatus",
+    "_drivkraft_primaer",
+    "_foerste_registrering_aar"
+  ],
+  "identifier_fields": [
+    "KoeretoejIdent",
+    "RegistreringNummerNummer",
+    "KoeretoejOplysningGrundStruktur.KoeretoejOplysningStelNummer",
+    "KoeretoejOplysningGrundStruktur.KoeretoejOplysningTilkobletSidevognStelnr"
+  ],
+  "sensitive_fields": [
+    "RegistreringNummerNummer",
+    "KoeretoejOplysningGrundStruktur.KoeretoejOplysningStelNummer",
+    "KoeretoejOplysningGrundStruktur.KoeretoejOplysningTilkobletSidevognStelnr"
+  ],
+  "recommended_aliases_file": "catalog/field-dictionary/dmr_recommended_aliases.json",
+  "field_dictionary_file": "catalog/field-dictionary/dmr_field_dictionary.json",
+  "recommended_filters": {
+    "currently_registered": "KoeretoejRegistreringStatus.keyword == \"Registreret\"",
+    "passenger_cars": "KoeretoejArtNavn.keyword == \"Personbil\""
+  },
+  "data_quality_notes": [
+    "Use `.keyword` fields for exact filters, grouping, and dashboard terms aggregations.",
+    "Registration numbers and VIN/chassis numbers are vehicle identifiers. Avoid exposing raw values in public screenshots or dashboards.",
+    "Treat numeric code fields ending in `Nummer`, `TypeNummer`, or `Ident` as identifiers or categories, not continuous measures.",
+    "Sanity-filter engine power, CO2, fuel economy, odometer, speed, and weight fields before calculating averages or rankings.",
+    "Nested collection-like XML structures may appear as a single object in one record and a list in another; importer normalization should handle known common cases before bulk indexing."
+  ],
+  "notes": [
+    "The dataset covers vehicle categories such as passenger cars, vans, motorcycles, trailers, and other registered vehicles.",
+    "Useful analysis dimensions include vehicle category, registration status, make, model, variant, body type, colour, first registration year, fuel/propulsion type, emissions, fuel economy, power, weight, and inspection result.",
+    "Importer-generated helper fields include _drivkraft_primaer, _co2_g_per_km_primaer, _km_per_liter_primaer, _maale_norm_primaer, and _foerste_registrering_aar.",
+    "The field dictionary translates Danish field names into English and provides recommended ES|QL fields for agents and dashboards."
+  ],
+  "status": "public-demo"
+}

@@ -1,0 +1,15 @@
+{
+  "kind": "tool",
+  "id": "dmr-raw-search",
+  "type": "index_search",
+  "description": "LAST RESORT raw record search for one vehicle when exact lookup tools do not fit. Never use for aggregate, statistical, trend, or analytical questions. For fleet counts use dmr-car-fleet-overview. For brand rankings use dmr-car-top-brands.",
+  "configuration": {
+    "pattern": "dmr-raw-000002",
+    "row_limit": 10,
+    "custom_instructions": "Search for individual vehicle records only. Always include KoeretoejRegistreringStatus in results. Use RegistreringNummerNummer for plate lookups, KoeretoejIdent for vehicle ID lookups, KoeretoejOplysningGrundStruktur.KoeretoejOplysningStelNummer for VIN lookups. Return at most 5 records. Never generate aggregate queries, STATS, or COUNT operations — use the dedicated DMR ES|QL tools for those."
+  },
+  "tags": [
+    "domain",
+    "dmr"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-brand-performance-summary",
+  "type": "esql",
+  "description": "Brands ranked by avg power, max power, avg top speed (registered passenger cars, ≥10 cars/brand). Use when user asks most powerful brand on average. Power is kW; hp = kW * 1.36.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" | EVAL kw_clean = CLAMP(KoeretoejOplysningGrundStruktur.KoeretoejMotorStruktur.KoeretoejMotorStoersteEffekt, 1, 750), speed_clean = CLAMP(KoeretoejOplysningGrundStruktur.KoeretoejOplysningMaksimumHastighed, 50, 400) | STATS car_count = COUNT(kw_clean), avg_power_kw = AVG(kw_clean), max_power_kw = MAX(kw_clean), avg_speed_kmh = AVG(speed_clean) BY brand = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword | WHERE car_count >= 10 | SORT avg_power_kw DESC | LIMIT 30",
+    "params": {}
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

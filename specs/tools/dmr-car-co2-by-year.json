@@ -1,0 +1,15 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-co2-by-year",
+  "type": "esql",
+  "description": "Avg/median CO2 g/km for new passenger-car registrations by year from 2000. Use when user asks CO2 trend. Pre-2017 NEDC vs post-2017 WLTP are not directly comparable.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejArtNavn.keyword == \"Personbil\" AND _foerste_registrering_aar IS NOT NULL AND _foerste_registrering_aar >= 2000 AND _foerste_registrering_aar <= 2030 AND _co2_g_per_km_primaer IS NOT NULL AND _co2_g_per_km_primaer > 0 AND _co2_g_per_km_primaer < 1000 | STATS car_count = COUNT(*), avg_co2_g_per_km = AVG(_co2_g_per_km_primaer), p50_co2_g_per_km = PERCENTILE(_co2_g_per_km_primaer, 50) BY registration_year = _foerste_registrering_aar | SORT registration_year ASC | LIMIT 30",
+    "params": {}
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

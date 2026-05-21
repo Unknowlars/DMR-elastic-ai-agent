@@ -1,0 +1,15 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-model-year-lag-summary",
+  "type": "esql",
+  "description": "Distribution of registered passenger cars by gap between first-registration year and model year. Use when user asks about used imports, pre-model-year registrations, or new-vs-used buying patterns.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND _foerste_registrering_aar IS NOT NULL AND _foerste_registrering_aar >= 1900 AND _foerste_registrering_aar <= 2030 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar IS NOT NULL AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar >= 1950 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar <= 2035 | EVAL lag_years = _foerste_registrering_aar - KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar, lag_band = CASE(lag_years < 0, \"Negative (next-year model)\", lag_years == 0, \"Same year\", lag_years <= 2, \"1-2 years\", lag_years <= 10, \"3-10 years\", \"11+ years\") | STATS car_count = COUNT(*), avg_lag = AVG(lag_years), p50_lag = PERCENTILE(lag_years, 50), p90_lag = PERCENTILE(lag_years, 90), max_lag = MAX(lag_years) BY lag_band | SORT car_count DESC | LIMIT 10",
+    "params": {}
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

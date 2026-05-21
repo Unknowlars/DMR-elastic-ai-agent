@@ -1,0 +1,17 @@
+{
+  "kind": "dataset-catalog",
+  "dataset_id": "content-oracle",
+  "index_patterns": [
+    "content-oracle-*"
+  ],
+  "purpose": "Potential domain-specific content dataset placeholder. Currently visible but empty in the first inventory snapshot.",
+  "owner": "unknown",
+  "time_field": "@timestamp",
+  "key_fields": [],
+  "sensitive_fields": [],
+  "notes": [
+    "Observed index: content-oracle-7d8e with zero documents at inventory time.",
+    "Keep in the catalog so future data landing here can be explored consistently."
+  ],
+  "status": "draft"
+}

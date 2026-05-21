@@ -1,0 +1,11 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-seat-count-distribution",
+  "type": "esql",
+  "description": "Counts registered passenger cars by valid seat count (1–9) and exposes missing and corrupt seat records. Use for 2-seater, 4-seater, 7-seater, 8-seater, or more-than-N-seat questions. Seats field: KoeretoejOplysningSiddepladserMinimum. Note: count 0 and values above 9 are corrupt and bucketed separately.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" | EVAL seats = KoeretoejOplysningGrundStruktur.KoeretoejOplysningSiddepladserMinimum, seat_bucket = CASE(seats IS NULL, \"Missing\", seats < 1 OR seats > 9, \"Invalid\", TO_STRING(ROUND(seats, 0))) | STATS car_count = COUNT(*) BY seat_bucket | SORT car_count DESC | LIMIT 15",
+    "params": {}
+  },
+  "tags": ["domain", "dmr", "analytics"]
+}

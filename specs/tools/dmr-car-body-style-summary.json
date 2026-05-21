@@ -1,0 +1,15 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-body-style-summary",
+  "type": "esql",
+  "description": "Summarizes the current registered Danish passenger-car fleet by body style. Use for questions about hatchbacks, station wagons, MPVs, sedans, or how body styles differ in average weight and seats.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KarrosseriTypeStruktur.KarrosseriTypeNavn.keyword IS NOT NULL | EVAL total_weight_clean = CASE(KoeretoejOplysningGrundStruktur.KoeretoejOplysningTotalVaegt >= 300 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningTotalVaegt <= 10000, KoeretoejOplysningGrundStruktur.KoeretoejOplysningTotalVaegt, null), seats_clean = CASE(KoeretoejOplysningGrundStruktur.KoeretoejOplysningSiddepladserMinimum >= 1 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSiddepladserMinimum <= 9, KoeretoejOplysningGrundStruktur.KoeretoejOplysningSiddepladserMinimum, null) | STATS vehicle_count = COUNT(*), avg_total_weight = AVG(total_weight_clean), avg_seats = AVG(seats_clean) BY body_style = KoeretoejOplysningGrundStruktur.KarrosseriTypeStruktur.KarrosseriTypeNavn.keyword | SORT vehicle_count DESC | LIMIT 10",
+    "params": {}
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

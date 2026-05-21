@@ -1,0 +1,15 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-power-to-weight-summary",
+  "type": "esql",
+  "description": "Power-to-weight kW/kg percentiles for current passenger cars by fuel type. Use for EV-vs-petrol performance-per-kg or typical/sporty/extreme ratios. Guide: 0.06 family, 0.10 sporty, 0.15 performance, 0.20+ supercar territory.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND _drivkraft_primaer IS NOT NULL | EVAL power_kw = CLAMP(KoeretoejOplysningGrundStruktur.KoeretoejMotorStruktur.KoeretoejMotorStoersteEffekt, 1, 750), kerb_weight_kg = CASE(KoeretoejOplysningGrundStruktur.KoeretoejOplysningKoereklarVaegtMinimum >= 300 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningKoereklarVaegtMinimum <= 5000, KoeretoejOplysningGrundStruktur.KoeretoejOplysningKoereklarVaegtMinimum, null), pw_ratio_kw_per_kg = power_kw / kerb_weight_kg | STATS car_count = COUNT(pw_ratio_kw_per_kg), p50_pw_kw_per_kg = PERCENTILE(pw_ratio_kw_per_kg, 50), p90_pw_kw_per_kg = PERCENTILE(pw_ratio_kw_per_kg, 90), p99_pw_kw_per_kg = PERCENTILE(pw_ratio_kw_per_kg, 99), max_pw_kw_per_kg = MAX(pw_ratio_kw_per_kg) BY fuel = _drivkraft_primaer | SORT car_count DESC | LIMIT 8",
+    "params": {}
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

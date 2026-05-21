@@ -1,0 +1,27 @@
+{
+  "kind": "agent",
+  "id": "dmr-market",
+  "name": "DMR Market & Compliance",
+  "description": "Small-model focused DMR agent for inspection results, brand pass rates, leasing penetration, accident history, rare/exotic brand discovery, and special permit types. Redirects uncovered analytical edge cases to dmr-analyst.",
+  "instructions_file": "prompts/dmr-market.instructions.md",
+  "skill_ids": [
+    "dmr-glossary",
+    "dmr-buyer-guide",
+    "dmr-fun-facts"
+  ],
+  "tool_ids": [
+    "dmr-car-inspection-summary",
+    "dmr-car-inspection-freshness",
+    "dmr-car-inspection-by-age",
+    "dmr-car-inspection-age-cohort-rates",
+    "dmr-car-inspection-pass-rate-by-brand",
+    "dmr-car-leasing-summary",
+    "dmr-car-active-leasing-by-brand",
+    "dmr-car-accident-summary",
+    "dmr-car-block-reason-summary",
+    "dmr-car-block-reason-by-brand",
+    "dmr-car-rarity-by-brand",
+    "dmr-permit-type-summary",
+    "dmr-car-permit-by-brand"
+  ]
+}

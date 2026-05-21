@@ -1,0 +1,15 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-towing-capacity-by-brand",
+  "type": "esql",
+  "description": "Ranks passenger-car brands by average braked towing capacity for current tow-capable cars. Use for best tow-car brands, trailers, or caravan use. Excludes brands with fewer than 100 tow-capable cars.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword IS NOT NULL | EVAL braked_towing_weight = CLAMP(KoeretoejOplysningGrundStruktur.KoeretoejOplysningTilkoblingsvaegtMedBremser, 0, 5000) | WHERE braked_towing_weight > 0 | STATS tow_capable_cars = COUNT(*), avg_braked_towing_weight = AVG(braked_towing_weight), p90_braked_towing_weight = PERCENTILE(braked_towing_weight, 90), max_braked_towing_weight = MAX(braked_towing_weight) BY brand = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword | WHERE tow_capable_cars >= 100 | SORT avg_braked_towing_weight DESC, tow_capable_cars DESC | LIMIT 30",
+    "params": {}
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-rarity-by-brand",
+  "type": "esql",
+  "description": "Returns passenger-car brands with fewer than max_count current registered cars. Use for rarest brands or fewer-than-N discovery. Not for direct named-brand lookup; use dmr-car-brand-count.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" | STATS car_count = COUNT(*) BY brand = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword | WHERE car_count <= ?max_count AND brand IS NOT NULL | SORT car_count ASC | LIMIT 50",
+    "params": {
+      "max_count": {
+        "type": "integer",
+        "description": "Maximum number of registered cars a brand can have to appear in the rarity list. Use 5 for ultra-rare, 50 for uncommon, 200 for niche brands.",
+        "default": 10
+      }
+    }
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

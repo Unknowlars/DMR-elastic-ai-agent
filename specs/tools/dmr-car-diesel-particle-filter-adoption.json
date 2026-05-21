@@ -1,0 +1,16 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-diesel-particle-filter-adoption",
+  "type": "esql",
+  "description": "Diesel passenger-car registrations by year with particle-filter count and adoption percentage. Use when user asks when DPF became standard, how many diesels lack DPF, or filter-adoption trend.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejArtNavn.keyword == \"Personbil\" AND _drivkraft_primaer == \"Diesel\" AND _foerste_registrering_aar IS NOT NULL AND _foerste_registrering_aar >= 1995 AND _foerste_registrering_aar <= 2026 AND KoeretoejOplysningGrundStruktur.KoeretoejMiljoeOplysningStruktur.KoeretoejMiljoeOplysningPartikelFilter IS NOT NULL | STATS total = COUNT(*), with_particle_filter = COUNT(*) WHERE KoeretoejOplysningGrundStruktur.KoeretoejMiljoeOplysningStruktur.KoeretoejMiljoeOplysningPartikelFilter == true BY registration_year = _foerste_registrering_aar | EVAL without_particle_filter = total - with_particle_filter, filter_pct = ROUND(with_particle_filter * 100.0 / total, 1) | SORT registration_year ASC | LIMIT 40",
+    "params": {}
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics",
+    "historical"
+  ]
+}

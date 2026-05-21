@@ -1,0 +1,15 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-top-models-per-brand",
+  "type": "esql",
+  "description": "Top 3 registered passenger-car models inside each brand by count. Use when user asks top models grouped by brand; preserve the brand/model grouping, not a global top 3.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" | STATS model_count = COUNT(*) BY brand = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword, model = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.Model.KoeretoejModelTypeNavn.keyword | INLINESTATS brand_total = SUM(model_count) BY brand | SORT brand_total DESC, brand ASC, model_count DESC | LIMIT 3 BY brand | SORT brand_total DESC, brand ASC, model_count DESC | LIMIT 60",
+    "params": {}
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

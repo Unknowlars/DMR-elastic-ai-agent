@@ -1,0 +1,16 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-brand-models",
+  "type": "esql",
+  "description": "Lists all car models registered in Denmark for a specific brand, sorted by count. Use for 'what models does X have', 'which X models are in Denmark', 'show me X models'. Pass the brand name in uppercase exactly as stored in the DMR registry. Known special cases: Alfa Romeo → brand_upper=ALFA, Mercedes → brand_upper=MERCEDES-BENZ, Land Rover → brand_upper=LAND ROVER. For unknown brands, use dmr-car-find-brand first to discover the exact registry name.",
+  "configuration": {
+    "query": "FROM dmr-cars-flat | WHERE TO_UPPER(brand) == ?brand_upper | STATS count = COUNT(*) BY model | WHERE model IS NOT NULL AND model != \"-\" | SORT count DESC | LIMIT 30",
+    "params": {
+      "brand_upper": {
+        "type": "string",
+        "description": "Brand name in UPPERCASE as stored in the DMR registry. Examples: TESLA, VOLKSWAGEN, PORSCHE, BMW, TOYOTA, ALFA, MERCEDES-BENZ, LAND ROVER, POLESTAR. Note: Alfa Romeo is stored as ALFA; Mercedes as MERCEDES-BENZ."
+      }
+    }
+  },
+  "tags": ["domain", "dmr", "analytics"]
+}

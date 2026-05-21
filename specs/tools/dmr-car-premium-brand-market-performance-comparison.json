@@ -1,0 +1,15 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-premium-brand-market-performance-comparison",
+  "type": "esql",
+  "description": "Compares Porsche, BMW, and Mercedes-Benz registered passenger cars by current count, valid average power, and leasing presence.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" | EVAL brand = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword | WHERE brand == \"PORSCHE\" OR brand == \"BMW\" OR brand == \"MERCEDES-BENZ\" | EVAL power_kw = CASE(KoeretoejOplysningGrundStruktur.KoeretoejMotorStruktur.KoeretoejMotorStoersteEffekt >= 1 AND KoeretoejOplysningGrundStruktur.KoeretoejMotorStruktur.KoeretoejMotorStoersteEffekt <= 750, KoeretoejOplysningGrundStruktur.KoeretoejMotorStruktur.KoeretoejMotorStoersteEffekt, null) | STATS car_count = COUNT(*), cars_with_valid_power = COUNT(power_kw), avg_power_kw = AVG(power_kw), leased_cars = COUNT(*) WHERE LeasingGyldigFra IS NOT NULL BY brand | EVAL avg_power_hp = ROUND(avg_power_kw * 1.36, 0), leasing_pct = ROUND(leased_cars * 100.0 / car_count, 1) | SORT car_count DESC | LIMIT 10",
+    "params": {}
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

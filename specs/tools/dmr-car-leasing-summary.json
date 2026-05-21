@@ -1,0 +1,15 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-leasing-summary",
+  "type": "esql",
+  "description": "Leasing penetration for registered passenger cars: total leased count, fleet share, and within-fuel EV/petrol/diesel leasing rates. Use for lease count/share or fuel-type leasing. Leased = LeasingGyldigFra is set. For 'how common is leasing among electric/petrol/diesel' use electric_leasing_pct / petrol_leasing_pct / diesel_leasing_pct (share of that fuel type leased). For share of total fleet use leased_share_of_fleet_pct.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" | STATS total_cars = COUNT(*), leased_cars = COUNT(*) WHERE LeasingGyldigFra IS NOT NULL, total_electric = COUNT(*) WHERE _drivkraft_primaer == \"El\", leased_electric = COUNT(*) WHERE LeasingGyldigFra IS NOT NULL AND _drivkraft_primaer == \"El\", total_petrol = COUNT(*) WHERE _drivkraft_primaer == \"Benzin\", leased_petrol = COUNT(*) WHERE LeasingGyldigFra IS NOT NULL AND _drivkraft_primaer == \"Benzin\", total_diesel = COUNT(*) WHERE _drivkraft_primaer == \"Diesel\", leased_diesel = COUNT(*) WHERE LeasingGyldigFra IS NOT NULL AND _drivkraft_primaer == \"Diesel\" | EVAL leased_share_of_fleet_pct = ROUND(leased_cars * 100.0 / total_cars, 1), electric_leasing_pct = ROUND(leased_electric * 100.0 / total_electric, 1), petrol_leasing_pct = ROUND(leased_petrol * 100.0 / total_petrol, 1), diesel_leasing_pct = ROUND(leased_diesel * 100.0 / total_diesel, 1), electric_leased_share_of_fleet_pct = ROUND(leased_electric * 100.0 / total_cars, 1), petrol_leased_share_of_fleet_pct = ROUND(leased_petrol * 100.0 / total_cars, 1), diesel_leased_share_of_fleet_pct = ROUND(leased_diesel * 100.0 / total_cars, 1) | LIMIT 1",
+    "params": {}
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

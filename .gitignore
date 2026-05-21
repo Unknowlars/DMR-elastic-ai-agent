@@ -1,0 +1,31 @@
+node_modules/
+old/
+
+# Local environment and credentials.
+.env
+.env.*
+!.env.example
+
+# Local assistant/editor state.
+.agents/
+.claude/
+.codex
+.mcp.json
+
+# Generated exports, eval runs, and local data.
+catalog/raw/
+reports/
+dmr_parser/data/
+dmr_field_dictionary_agent_skill_bundle*
+
+# Python local state.
+__pycache__/
+*.py[cod]
+dmr_parser/.venv/
+.venv/
+
+# DMR source exports are large and should be downloaded outside the repo.
+ESStatistikListeModtag*.xml
+ESStatistikListeModtag*.zip
+dmr_parser/ESStatistikListeModtag-*.xml
+!dmr_parser/ESStatistikListeModtag-5MB.xml

@@ -1,0 +1,15 @@
+{
+  "kind": "tool",
+  "id": "dmr-fuel-mix-summary",
+  "type": "esql",
+  "description": "All-vehicle fleet by primary fuel with avg CO2 and km/liter. Use when user asks fuel mix across all vehicles, or fuel-level emissions/efficiency. Passenger-car only: dmr-car-fuel-age-summary.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND _drivkraft_primaer IS NOT NULL | STATS vehicle_count = COUNT(*), avg_co2_g_per_km = AVG(_co2_g_per_km_primaer), avg_km_per_liter = AVG(_km_per_liter_primaer) BY primary_fuel = _drivkraft_primaer | SORT vehicle_count DESC | LIMIT 20",
+    "params": {}
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-all-time-top-models",
+  "type": "esql",
+  "description": "Most registered passenger-car brand/model combinations in Danish history across all time including deregistered cars. Use for 'most popular car ever in Denmark', 'best-selling models of all time', 'what car did Danes drive most historically', or 'all-time top cars'. Different from dmr-car-top-models which shows only currently registered cars — this covers the full 100-year registry.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejArtNavn.keyword == \"Personbil\" | STATS all_time_count = COUNT(*), currently_registered = COUNT(*) WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" BY brand = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword, model = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.Model.KoeretoejModelTypeNavn.keyword | WHERE brand IS NOT NULL AND model IS NOT NULL AND all_time_count >= 1000 | SORT all_time_count DESC | LIMIT 25",
+    "params": {}
+  },
+  "tags": ["domain", "dmr", "analytics", "historical"]
+}

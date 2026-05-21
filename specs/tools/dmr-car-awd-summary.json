@@ -1,0 +1,15 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-awd-summary",
+  "type": "esql",
+  "description": "Registered passenger-car AWD/4WD summary with ES|QL-computed percentages. Use when user asks AWD/4WD count or share. 1 = one driven axle, 2 = AWD/4WD.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" | EVAL driven_axles = KoeretoejOplysningGrundStruktur.KoeretoejOplysningTraekkendeAkslerListe | STATS total_registered_cars = COUNT(*), known_drivetrain_cars = COUNT(*) WHERE driven_axles >= 1 AND driven_axles <= 4, one_driven_axle_cars = COUNT(*) WHERE driven_axles == 1, awd_4wd_cars = COUNT(*) WHERE driven_axles == 2, other_known_drivetrain_cars = COUNT(*) WHERE driven_axles >= 3 AND driven_axles <= 4 | EVAL awd_share_of_total_pct = ROUND(awd_4wd_cars * 100.0 / total_registered_cars, 1), awd_share_of_known_drivetrain_pct = ROUND(awd_4wd_cars * 100.0 / known_drivetrain_cars, 1), one_driven_axle_share_of_known_drivetrain_pct = ROUND(one_driven_axle_cars * 100.0 / known_drivetrain_cars, 1) | LIMIT 1",
+    "params": {}
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

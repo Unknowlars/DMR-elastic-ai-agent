@@ -1,0 +1,33 @@
+{
+  "kind": "dataset-catalog",
+  "dataset_id": "observability-platform",
+  "index_patterns": [
+    ".ds-logs-docker.*",
+    ".ds-metrics-docker.*",
+    ".ds-logs-system.*",
+    ".ds-metrics-system.*",
+    ".ds-logs-elastic_agent*",
+    ".ds-metrics-elastic_agent.*",
+    ".ds-metrics-fleet_server.*",
+    ".ds-synthetics-*",
+    ".monitoring-*"
+  ],
+  "purpose": "Operational telemetry for hosts, containers, Elastic Agent, Fleet, synthetic checks, and stack monitoring.",
+  "owner": "platform",
+  "time_field": "@timestamp",
+  "key_fields": [
+    "host.name",
+    "service.name",
+    "container.id",
+    "event.dataset",
+    "agent.id"
+  ],
+  "sensitive_fields": [],
+  "notes": [
+    "This cluster has strong observability coverage across logs, metrics, monitoring, and synthetics.",
+    "The Docker container log stream is currently the largest platform dataset, with roughly 79.6M documents in the visible backing index.",
+    "This family can support troubleshooting agents after the discovery agents are in place."
+  ],
+  "status": "candidate"
+}
+

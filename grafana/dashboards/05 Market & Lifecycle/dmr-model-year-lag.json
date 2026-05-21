@@ -1,0 +1,728 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "How old was a car when first registered in Denmark? The max lag on record is 44 years. This dashboard reveals the import culture, classic car registrations, and data anomalies behind the numbers.",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [
+    {
+      "asDropdown": true,
+      "includeVars": true,
+      "keepTime": true,
+      "tags": [
+        "dmr"
+      ],
+      "targetBlank": false,
+      "title": "DMR dashboard suite",
+      "type": "dashboards"
+    }
+  ],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 5,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar IS NOT NULL AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar > 1900 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar <= 2026 AND _foerste_registrering_aar IS NOT NULL | STATS cars_with_model_year = COUNT(*)",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Cars With Model Year Data",
+      "type": "stat",
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 5,
+        "x": 5,
+        "y": 0
+      },
+      "id": 2,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar IS NOT NULL AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar > 1900 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar <= 2026 AND _foerste_registrering_aar IS NOT NULL | EVAL lag = _foerste_registrering_aar - KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar | STATS fresh_registrations = COUNT(*) WHERE lag == 0",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Cars Registered Same Year as Model Year",
+      "type": "stat",
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 5,
+        "x": 10,
+        "y": 0
+      },
+      "id": 3,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar IS NOT NULL AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar > 1900 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar <= 2026 AND _foerste_registrering_aar IS NOT NULL | EVAL lag = _foerste_registrering_aar - KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar | STATS delayed_5plus = COUNT(*) WHERE lag >= 5",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Cars Registered 5+ Years After Model Year",
+      "type": "stat",
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 5,
+        "x": 15,
+        "y": 0
+      },
+      "id": 4,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar IS NOT NULL AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar > 1900 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar <= 2026 AND _foerste_registrering_aar IS NOT NULL | EVAL lag = _foerste_registrering_aar - KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar | STATS classic_imports = COUNT(*) WHERE lag >= 20",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Cars Registered 20+ Years After Model Year",
+      "type": "stat",
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 20,
+        "y": 0
+      },
+      "id": 5,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar IS NOT NULL AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar > 1900 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar <= 2026 AND _foerste_registrering_aar IS NOT NULL | EVAL lag = _foerste_registrering_aar - KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar | WHERE lag >= 0 AND lag <= 80 | STATS max_lag_years = MAX(lag)",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Max Lag on Record (years)",
+      "type": "stat",
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 5
+      },
+      "id": 6,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND (\"${fuel}\" == \"All\" OR _drivkraft_primaer == \"${fuel}\") AND _foerste_registrering_aar IS NOT NULL AND _foerste_registrering_aar >= ${year_from} AND _foerste_registrering_aar <= ${year_to} AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar IS NOT NULL AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar > 1900 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar <= 2026 AND _foerste_registrering_aar IS NOT NULL | EVAL lag = _foerste_registrering_aar - KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar, lag_bucket = CASE(lag < 0, \"Pre-model (anomaly)\", lag == 0, \"Same year\", lag == 1, \"1 year\", lag == 2, \"2 years\", lag <= 5, \"3-5 years\", lag <= 10, \"6-10 years\", lag <= 20, \"11-20 years\", lag <= 30, \"21-30 years\", \"31+ years\") | STATS cars = COUNT(*) BY lag_bucket | SORT cars DESC",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Model Year Lag Distribution",
+      "type": "barchart",
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 5
+      },
+      "id": 7,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND (\"${fuel}\" == \"All\" OR _drivkraft_primaer == \"${fuel}\") AND _foerste_registrering_aar IS NOT NULL AND _foerste_registrering_aar >= ${year_from} AND _foerste_registrering_aar <= ${year_to} AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar IS NOT NULL AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar > 1900 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar <= 2026 AND _foerste_registrering_aar IS NOT NULL | EVAL lag = _foerste_registrering_aar - KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar, year_date = TO_DATETIME(CONCAT(TO_STRING(_foerste_registrering_aar), \"-01-01\")) | WHERE lag >= 0 AND lag <= 50 | STATS avg_model_year_lag = AVG(lag) BY year_date | SORT year_date ASC",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Avg Model Year Lag by First Registration Year",
+      "type": "timeseries",
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 0,
+        "y": 14
+      },
+      "id": 8,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND _foerste_registrering_aar IS NOT NULL AND _foerste_registrering_aar >= ${year_from} AND _foerste_registrering_aar <= ${year_to} AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar IS NOT NULL AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar > 1900 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar <= 2026 AND _foerste_registrering_aar IS NOT NULL AND KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword IS NOT NULL | EVAL lag = _foerste_registrering_aar - KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar | WHERE lag >= 0 AND lag <= 60 | STATS cars = COUNT(*), avg_lag = AVG(lag) BY brand = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword | WHERE cars >= 100 | SORT avg_lag DESC | LIMIT 15",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Brands With Longest Avg Model Year Lag",
+      "type": "barchart",
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 8,
+        "y": 14
+      },
+      "id": 9,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND _foerste_registrering_aar IS NOT NULL AND _foerste_registrering_aar >= ${year_from} AND _foerste_registrering_aar <= ${year_to} AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar IS NOT NULL AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar > 1900 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar <= 2026 AND _foerste_registrering_aar IS NOT NULL AND KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword IS NOT NULL | EVAL lag = _foerste_registrering_aar - KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar | WHERE lag >= 0 AND lag <= 10 | STATS cars = COUNT(*), avg_lag = AVG(lag) BY brand = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword | WHERE cars >= 500 | SORT avg_lag ASC | LIMIT 15",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Brands With Shortest Avg Model Year Lag",
+      "type": "barchart",
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 16,
+        "y": 14
+      },
+      "id": 10,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND _foerste_registrering_aar IS NOT NULL AND _foerste_registrering_aar >= ${year_from} AND _foerste_registrering_aar <= ${year_to} AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar IS NOT NULL AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar > 1900 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar <= 2026 AND _foerste_registrering_aar IS NOT NULL | EVAL lag = _foerste_registrering_aar - KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar, decade = CASE(_foerste_registrering_aar < 1990, \"Before 1990\", _foerste_registrering_aar < 2000, \"1990s\", _foerste_registrering_aar < 2010, \"2000s\", _foerste_registrering_aar < 2020, \"2010s\", \"2020s\") | WHERE lag > 20 | STATS cars = COUNT(*) BY decade | SORT decade ASC",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Lag > 20 Years by First Registration Decade",
+      "type": "barchart",
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 0,
+        "y": 23
+      },
+      "id": 11,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND _foerste_registrering_aar IS NOT NULL AND _foerste_registrering_aar >= ${year_from} AND _foerste_registrering_aar <= ${year_to} AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar IS NOT NULL AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar > 1900 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar <= 2026 AND _foerste_registrering_aar IS NOT NULL AND KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword IS NOT NULL | EVAL lag = _foerste_registrering_aar - KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar | WHERE lag >= 0 AND lag <= 60 | STATS cars = COUNT(*), avg_lag_years = AVG(lag), max_lag_years = MAX(lag) BY brand = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword | WHERE cars >= 100 | SORT avg_lag_years DESC | LIMIT 30",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Brands With Avg Lag by Car Count",
+      "type": "table",
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 8,
+        "y": 23
+      },
+      "id": 12,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar IS NOT NULL AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar > 1900 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar <= 2026 AND _foerste_registrering_aar IS NOT NULL AND KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword IS NOT NULL | EVAL lag = _foerste_registrering_aar - KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar | WHERE lag >= 30 | STATS cars = COUNT(*), max_lag_years = MAX(lag) BY brand = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword | SORT cars DESC | LIMIT 30",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Time Travellers: 30+ Year Lag by Brand",
+      "type": "table",
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 16,
+        "y": 23
+      },
+      "id": 13,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND _foerste_registrering_aar IS NOT NULL AND _foerste_registrering_aar >= ${year_from} AND _foerste_registrering_aar <= ${year_to} AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar IS NOT NULL AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar > 1900 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar <= 2026 AND _foerste_registrering_aar IS NOT NULL AND _drivkraft_primaer IS NOT NULL | EVAL lag = _foerste_registrering_aar - KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar, lag_bucket = CASE(lag == 0, \"Same year\", lag <= 2, \"1-2 years\", lag <= 5, \"3-5 years\", lag <= 10, \"6-10 years\", \"10+ years\") | WHERE lag >= 0 | STATS cars = COUNT(*) BY fuel = _drivkraft_primaer, lag_bucket | SORT fuel ASC, cars DESC | LIMIT 60",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Lag Distribution by Fuel Type",
+      "type": "table",
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      }
+    }
+  ],
+  "refresh": "",
+  "schemaVersion": 41,
+  "style": "dark",
+  "tags": [
+    "dmr",
+    "elasticsearch"
+  ],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": true,
+          "text": "All",
+          "value": "All"
+        },
+        "hide": 0,
+        "label": "Fuel",
+        "name": "fuel",
+        "options": [
+          {
+            "selected": true,
+            "text": "All",
+            "value": "All"
+          },
+          {
+            "selected": false,
+            "text": "El",
+            "value": "El"
+          },
+          {
+            "selected": false,
+            "text": "Benzin",
+            "value": "Benzin"
+          },
+          {
+            "selected": false,
+            "text": "Diesel",
+            "value": "Diesel"
+          },
+          {
+            "selected": false,
+            "text": "Plugin hybrid",
+            "value": "Plugin hybrid"
+          },
+          {
+            "selected": false,
+            "text": "Hybrid",
+            "value": "Hybrid"
+          }
+        ],
+        "query": "All,El,Benzin,Diesel,Plugin hybrid,Hybrid",
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "1900",
+          "value": "1900"
+        },
+        "hide": 0,
+        "label": "First registration from",
+        "name": "year_from",
+        "options": [
+          {
+            "selected": true,
+            "text": "1900",
+            "value": "1900"
+          }
+        ],
+        "query": "1900",
+        "type": "textbox"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "2026",
+          "value": "2026"
+        },
+        "hide": 0,
+        "label": "First registration to",
+        "name": "year_to",
+        "options": [
+          {
+            "selected": true,
+            "text": "2026",
+            "value": "2026"
+          }
+        ],
+        "query": "2026",
+        "type": "textbox"
+      }
+    ]
+  },
+  "time": {
+    "from": "1900-01-01T00:00:00Z",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "DMR Model Year Time Machine",
+  "uid": "dmr-model-year-lag",
+  "version": 1,
+  "weekStart": ""
+}

@@ -1,0 +1,21 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-permit-by-brand",
+  "type": "esql",
+  "description": "Top passenger-car brands holding a specific permit (default 'Tempo 100'). Counts only currently registered cars. Use when user asks which brands have the most veteran cars, Tempo 100 caravan permits, rental permits (Udlejning Uden Fører), goods-transport (Vognmandskørsel), exercise driving (Øvelseskørsel), etc. For the full distribution of permit types in the fleet use dmr-permit-type-summary.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejRegistreringStatus.keyword == \"Registreret\" AND TilladelseSamling.Tilladelse.TilladelseStruktur.TilladelseTypeStruktur.TilladelseTypeNavn.keyword == ?permit_name AND KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword IS NOT NULL | STATS car_count = COUNT(*) BY brand = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword | SORT car_count DESC | LIMIT 25",
+    "params": {
+      "permit_name": {
+        "type": "string",
+        "description": "Permit type name as in TilladelseTypeNavn. Known values: 'Synsfri Sammenkobling', 'Firmakørsel', 'Udlejning Uden Fører', 'Vognmandskørsel', 'Veterankørsel', 'Miljøvenlig', 'Øvelseskørsel', 'Tempo 100', 'Tempo 40', 'Buskørsel', 'Udrykningskørsel', 'Rutekørsel'.",
+        "default": "Tempo 100"
+      }
+    }
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

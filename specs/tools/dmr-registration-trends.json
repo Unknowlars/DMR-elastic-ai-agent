@@ -1,0 +1,15 @@
+{
+  "kind": "tool",
+  "id": "dmr-registration-trends",
+  "type": "esql",
+  "description": "Year-by-year first-registration counts across all vehicle types. Use when user asks all-vehicle annual registration trend. Passenger-car EV trend: dmr-car-ev-adoption-trend.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE _foerste_registrering_aar IS NOT NULL AND _foerste_registrering_aar >= 1900 AND _foerste_registrering_aar <= 2030 | STATS vehicle_count = COUNT(*) BY registration_year = _foerste_registrering_aar | SORT registration_year ASC | LIMIT 150",
+    "params": {}
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

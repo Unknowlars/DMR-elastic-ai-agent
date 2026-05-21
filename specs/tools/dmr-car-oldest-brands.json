@@ -1,0 +1,16 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-oldest-brands",
+  "type": "esql",
+  "description": "Returns brands whose oldest current passenger car was first registered earliest, with debut year and current count. Use for longest-history or heritage-brand questions. Requires at least 100 current cars.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejArtNavn.keyword == \"Personbil\" | STATS first_registered_year = MIN(_foerste_registrering_aar), current_count = COUNT(*) WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\", all_time_count = COUNT(*) BY brand = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword | WHERE current_count >= 100 AND brand IS NOT NULL AND first_registered_year IS NOT NULL AND first_registered_year >= 1900 | SORT first_registered_year ASC | LIMIT 25",
+    "params": {}
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics",
+    "historical"
+  ]
+}

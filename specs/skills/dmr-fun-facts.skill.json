@@ -1,0 +1,50 @@
+{
+  "kind": "skill",
+  "id": "dmr-fun-facts",
+  "name": "DMR Fun Facts",
+  "description": "Activate for open-ended, creative, comparative, or surprising DMR questions — 'is that normal', 'what does the average Danish car look like', 'is Denmark boring with cars', 'are Danish roads getting quieter', 'what happened to Lada', 'are there really only 13 hydrogen cars', or any question where a verified fleet fact would add meaning or delight. Contains pre-verified statistics with real-world anchors.",
+  "content": "Load this skill when:\n- A user asks if something is normal, rare, typical, or surprising in the Danish fleet\n- A tool result contains a number that needs human-scale context to land (e.g. '13 hydrogen cars' needs anchoring)\n- A user asks an open-ended, creative, or comparative question about Danish car culture\n- A user seems to want a conversation rather than just a data lookup\n\nPick ONE relevant fact block and add a single contextualising sentence after the direct data answer. Do not volunteer multiple facts unprompted. Never fabricate statistics — only use what is in the referenced content below.",
+  "referenced_content": [
+    {
+      "name": "fleet-scale",
+      "relativePath": "./fleet-scale",
+      "content": "Denmark has approximately 5.9 million people and 2,935,158 registered passenger cars — roughly 1 car for every 2 people.\n\n534,900 cars are on active leases — roughly the population of Aarhus and Odense combined.\n\nIf all registered Danish passenger cars were parked bumper-to-bumper in a single line (average car length ~4.5 m), they would stretch approximately 13,000 km — longer than the distance from Copenhagen to Bangkok.\n\n1,577,527 registered cars (54% of the fleet) have had a Euro NCAP crash test — more than half the Danish car fleet has a documented safety rating."
+    },
+    {
+      "name": "color-story",
+      "relativePath": "./color-story",
+      "content": "The three most common car colours in Denmark are grey/Grå (730,398), black/Sort (504,588), and white/Hvid (413,802). Combined they represent 56% of all registered passenger cars with a known colour.\n\nOnly 4,427 purple or violet cars are registered in all of Denmark — fewer than the seating capacity of the Royal Arena.\n\nGrey alone outnumbers white, blue, red, brown, green, yellow, orange, and purple combined.\n\n594,379 cars have an unknown or unrecorded colour (Ukendt) — the mystery-colour category is larger than the entire white car population.\n\nGreys trend: use dmr-car-grey-trend to show whether Danish cars are getting more boring decade by decade. (They are.)"
+    },
+    {
+      "name": "electric-story",
+      "relativePath": "./electric-story",
+      "content": "597,678 registered Danish passenger cars are fully electric — that is 1 in every 5 cars on Danish roads.\n\nDenmark's EV share of around 20% is among the highest in the world for any country with a cold climate.\n\nOnly 13 cars in Denmark run on hydrogen — fewer than the number of professional football clubs in the Danish Superliga.\n\nPlug-in hybrids use the fuel label 'El/benzin'. 'El' alone means fully battery-electric only — there is no blended label."
+    },
+    {
+      "name": "age-story",
+      "relativePath": "./age-story",
+      "content": "The oldest currently registered Danish passenger car was first registered in 1902 — it is over 120 years old and still on the road.\n\n12,671 cars carry the official DMR veteran designation, typically meaning 35+ years old and largely original.\n\nSurvival rates drop sharply with age. The surviving 1960s and 1970s cars are disproportionately cabriolets, coupes, and prestige models — the ordinary cars from those decades are mostly long gone. Use dmr-car-surviving-by-decade for the full picture.\n\nA car from the 1990s has a survival rate of roughly 1–5% — meaning 95–99 out of every 100 cars registered in the 1990s are no longer on Danish roads."
+    },
+    {
+      "name": "extinction-story",
+      "relativePath": "./extinction-story",
+      "content": "LADA: 20,355 cars registered in Denmark across all time. Only 144 remain registered today — a 99.3% extinction rate. Those 144 Ladas are the last of a generation.\n\nDAIHATSU: 16,017 all-time, 109 currently registered (99.3% gone).\n\nDAEWOO: 8,333 all-time, 199 currently registered (97.6% gone).\n\nROVER: 7,256 all-time, 728 currently registered (90% gone).\n\nFor context: VOLKSWAGEN alone has 371,699 cars currently registered — roughly equivalent to 2,580 entire surviving Lada fleets."
+    },
+    {
+      "name": "new-arrivals",
+      "relativePath": "./new-arrivals",
+      "content": "New brands arriving in Denmark (first registration year and current count as of latest data):\n\nDEEPAL (2026): 18 cars — the newest brand in the registry as of 2026.\nFirefly (2025): 14 cars.\nLeapmotor (2025): 436 cars.\nOMODA (2025): 159 cars.\nZEEKR (2023): 1,287 cars — the largest recent Chinese EV brand by current fleet.\nVoyah (2023): 173 cars.\nKG Mobility (2024): 154 cars.\n\n'Today Sunshine' is a real brand in the DMR registry with 5 registered cars.\n\nAlmost all brands arriving since 2023 are Chinese. The Chinese EV market entry into Denmark is visible year by year directly in the registry data."
+    },
+    {
+      "name": "noise-story",
+      "relativePath": "./noise-story",
+      "content": "Danish roads were acoustically loudest in the 1980s: average standing noise 86.5 dB for cars registered in that decade.\n\nBy the 2020s, average standing noise has fallen to 74.4 dB. A 12 dB reduction means roughly 75% less acoustic energy — 2020s cars are dramatically quieter than 1980s cars by any measure.\n\nElectric vehicles do not have combustion-noise registry fields, so the noise trend data covers ICE vehicles only. As EV share grows, the trend will increasingly exclude new registrations — making future decade comparisons less direct."
+    },
+    {
+      "name": "body-style-story",
+      "relativePath": "./body-style-story",
+      "content": "The sedan is dying in Denmark: only 84,397 new sedans registered in the 2020s, versus 481,634 hatchbacks.\n\nIn the 1960s surviving fleet, cabriolets (2,645) were almost as numerous as sedans (2,791). This is survivorship bias — only the special cars from that era remain; ordinary saloons have been scrapped.\n\nThe stationcar is staging a comeback: in the 2020s, stationcars (478,605) are almost neck-and-neck with hatchbacks (481,634) for the first time in decades.\n\nThe coupe is rare: only 6,824 new coupes registered in the 2020s — roughly the same number as cabriolets (6,610), and far fewer than in any decade since the 1960s.\n\nThe MPV peaked in the 2010s (405,327) but remains strong into the 2020s (298,550)."
+    }
+  ],
+  "tool_ids": []
+}

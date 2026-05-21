@@ -1,0 +1,15 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-ev-share-by-body-style",
+  "type": "esql",
+  "description": "Body-style by fuel breakdown with EV share percentage per body style. Use when user asks which body style is most electric, or how fuel mix differs across sedans, hatchbacks, SUVs.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KarrosseriTypeStruktur.KarrosseriTypeNavn.keyword IS NOT NULL AND _drivkraft_primaer IS NOT NULL | STATS total = COUNT(*), electric = COUNT(*) WHERE _drivkraft_primaer == \"El\", petrol = COUNT(*) WHERE _drivkraft_primaer == \"Benzin\", diesel = COUNT(*) WHERE _drivkraft_primaer == \"Diesel\" BY body_style = KoeretoejOplysningGrundStruktur.KarrosseriTypeStruktur.KarrosseriTypeNavn.keyword | EVAL ev_pct = ROUND(electric * 100.0 / total, 1) | SORT total DESC | LIMIT 12",
+    "params": {}
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

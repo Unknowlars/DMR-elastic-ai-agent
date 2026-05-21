@@ -1,0 +1,11 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-towing-to-kerbweight-by-brand",
+  "type": "esql",
+  "description": "Ranks brands by braked towing capacity as a percentage of kerbweight for registered passenger cars. Filters to valid towing (1–5000 kg) and kerbweight (300–5000 kg). Requires at least 100 qualifying cars per brand. Use for towing-to-weight ratio or practical towing capability questions.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" | EVAL tow = CASE(KoeretoejOplysningGrundStruktur.KoeretoejOplysningTilkoblingsvaegtMedBremser > 0 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningTilkoblingsvaegtMedBremser <= 5000, KoeretoejOplysningGrundStruktur.KoeretoejOplysningTilkoblingsvaegtMedBremser, NULL), kerb = CASE(KoeretoejOplysningGrundStruktur.KoeretoejOplysningKoereklarVaegtMinimum >= 300 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningKoereklarVaegtMinimum <= 5000, KoeretoejOplysningGrundStruktur.KoeretoejOplysningKoereklarVaegtMinimum, NULL) | WHERE tow IS NOT NULL AND kerb IS NOT NULL | STATS tow_capable_cars = COUNT(*), avg_towing_kg = ROUND(AVG(tow), 0), avg_kerb_kg = ROUND(AVG(kerb), 0), avg_tow_to_kerb_pct = ROUND(AVG(tow * 100.0 / kerb), 1) BY brand = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword | WHERE tow_capable_cars >= 100 | SORT avg_tow_to_kerb_pct DESC | LIMIT 30",
+    "params": {}
+  },
+  "tags": ["domain", "dmr", "analytics"]
+}

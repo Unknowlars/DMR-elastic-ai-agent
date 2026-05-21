@@ -1,0 +1,15 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-power-segment-summary",
+  "type": "esql",
+  "description": "Classifies current registered passenger cars into economy, family, executive, performance, and exotic power tiers by kW. Use for mainstream-vs-performance fleet questions. Bounds: 1-750 kW.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" | EVAL power_kw = CLAMP(KoeretoejOplysningGrundStruktur.KoeretoejMotorStruktur.KoeretoejMotorStoersteEffekt, 1, 750) | WHERE power_kw IS NOT NULL | EVAL power_tier = CASE(power_kw < 60, \"Economy\", power_kw < 120, \"Family\", power_kw < 200, \"Executive\", power_kw <= 400, \"Performance\", \"Exotic\") | STATS car_count = COUNT(*), avg_power_kw = AVG(power_kw) BY power_tier | SORT car_count DESC | LIMIT 10",
+    "params": {}
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

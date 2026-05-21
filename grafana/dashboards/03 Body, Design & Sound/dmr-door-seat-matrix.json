@@ -1,0 +1,646 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "Every door×seat combination exists in the DMR — including 40,653 cars with 5 doors but only 1 seat (yellow-plate conversions) and 2,460 with 3 doors and 9 seats (minibuses).",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [
+    {
+      "asDropdown": true,
+      "includeVars": true,
+      "keepTime": true,
+      "tags": [
+        "dmr"
+      ],
+      "targetBlank": false,
+      "title": "DMR dashboard suite",
+      "type": "dashboards"
+    }
+  ],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 5,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSiddepladserMinimum == 1 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningAntalDoere == 5 | STATS cars = COUNT(*)",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "1-Seat Cars with 5 Doors",
+      "type": "stat",
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 5,
+        "x": 5,
+        "y": 0
+      },
+      "id": 2,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSiddepladserMinimum == 1 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningAntalDoere == 4 | STATS cars = COUNT(*)",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "1-Seat Cars with 4 Doors",
+      "type": "stat",
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 5,
+        "x": 10,
+        "y": 0
+      },
+      "id": 3,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSiddepladserMinimum == 2 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningAntalDoere == 2 | STATS cars = COUNT(*)",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "True 2-Door 2-Seat Coupés",
+      "type": "stat",
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 5,
+        "x": 15,
+        "y": 0
+      },
+      "id": 4,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSiddepladserMinimum == 9 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningAntalDoere == 3 | STATS cars = COUNT(*)",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "3-Door 9-Seat Minibuses",
+      "type": "stat",
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 20,
+        "y": 0
+      },
+      "id": 5,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningAntalDoere == 0 | STATS cars = COUNT(*)",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Zero-Door Cars",
+      "type": "stat",
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 5
+      },
+      "id": 6,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningAntalDoere IS NOT NULL AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSiddepladserMinimum IS NOT NULL AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningAntalDoere <= 6 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSiddepladserMinimum <= 9 | EVAL combo = CONCAT(TO_STRING(KoeretoejOplysningGrundStruktur.KoeretoejOplysningAntalDoere), \"-door, \", TO_STRING(KoeretoejOplysningGrundStruktur.KoeretoejOplysningSiddepladserMinimum), \"-seat\") | STATS cars = COUNT(*) BY combo | SORT cars DESC | LIMIT 20",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Top Door×Seat Combinations",
+      "type": "barchart",
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 5
+      },
+      "id": 7,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningAntalDoere IS NOT NULL AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSiddepladserMinimum IS NOT NULL AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningAntalDoere <= 6 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSiddepladserMinimum <= 9 | EVAL combo = CONCAT(TO_STRING(KoeretoejOplysningGrundStruktur.KoeretoejOplysningAntalDoere), \"-door, \", TO_STRING(KoeretoejOplysningGrundStruktur.KoeretoejOplysningSiddepladserMinimum), \"-seat\") | STATS cars = COUNT(*) BY combo | WHERE cars <= 2000 AND cars >= 50 | SORT cars DESC | LIMIT 20",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Weird Door×Seat Combos (≤2000 cars)",
+      "type": "barchart",
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 0,
+        "y": 14
+      },
+      "id": 8,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningAntalDoere > 0 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSiddepladserMinimum > 0 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningAntalDoere <= 6 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSiddepladserMinimum <= 9 | EVAL ratio = KoeretoejOplysningGrundStruktur.KoeretoejOplysningAntalDoere * 1.0 / KoeretoejOplysningGrundStruktur.KoeretoejOplysningSiddepladserMinimum, tier = CASE(ratio < 0.5, \"<0.5 (cramped)\", ratio < 0.8, \"0.5-0.79\", ratio < 1.0, \"0.8-0.99\", ratio < 1.5, \"1.0-1.49\", ratio < 2.0, \"1.5-1.99\", \"2.0+ (luxury)\") | STATS cars = COUNT(*) BY tier | SORT cars DESC",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Doors-per-Seat Ratio Distribution",
+      "type": "barchart",
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 8,
+        "y": 14
+      },
+      "id": 9,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSiddepladserMinimum == 1 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningAntalDoere IS NOT NULL AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningAntalDoere <= 6 | STATS cars = COUNT(*) BY doors = KoeretoejOplysningGrundStruktur.KoeretoejOplysningAntalDoere | SORT doors ASC",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "1-Seat Conversions by Door Count",
+      "type": "barchart",
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 16,
+        "y": 14
+      },
+      "id": 10,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSiddepladserMinimum >= 7 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSiddepladserMinimum <= 9 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningAntalDoere IS NOT NULL AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningAntalDoere <= 6 | STATS cars = COUNT(*) BY doors = KoeretoejOplysningGrundStruktur.KoeretoejOplysningAntalDoere | SORT doors ASC",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "7+ Seat Cars by Door Count",
+      "type": "barchart",
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 0,
+        "y": 23
+      },
+      "id": 11,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningAntalDoere IS NOT NULL AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSiddepladserMinimum IS NOT NULL AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningAntalDoere <= 6 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSiddepladserMinimum <= 9 | STATS cars = COUNT(*) BY doors = KoeretoejOplysningGrundStruktur.KoeretoejOplysningAntalDoere, seats = KoeretoejOplysningGrundStruktur.KoeretoejOplysningSiddepladserMinimum | WHERE cars >= 100 | SORT doors ASC, seats ASC | LIMIT 60",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Door×Seat Matrix — Full Table",
+      "type": "table",
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 8,
+        "y": 23
+      },
+      "id": 12,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword IS NOT NULL AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningAntalDoere IS NOT NULL AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSiddepladserMinimum IS NOT NULL AND ((KoeretoejOplysningGrundStruktur.KoeretoejOplysningSiddepladserMinimum == 1 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningAntalDoere >= 4) OR (KoeretoejOplysningGrundStruktur.KoeretoejOplysningSiddepladserMinimum >= 6 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningAntalDoere <= 3) OR (KoeretoejOplysningGrundStruktur.KoeretoejOplysningAntalDoere == 0)) | STATS weird_cars = COUNT(*) BY brand = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword | WHERE weird_cars >= 50 | SORT weird_cars DESC | LIMIT 25",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Weirdest Brands (≥1 rare combo)",
+      "type": "table",
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      }
+    },
+    {
+      "datasource": {
+        "type": "elasticsearch",
+        "uid": "dmr-elasticsearch"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 16,
+        "y": 23
+      },
+      "id": 13,
+      "targets": [
+        {
+          "query": "FROM $__index | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword IS NOT NULL AND KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.Model.KoeretoejModelTypeNavn.keyword IS NOT NULL AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningAntalDoere IS NOT NULL AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningSiddepladserMinimum IS NOT NULL AND ((KoeretoejOplysningGrundStruktur.KoeretoejOplysningSiddepladserMinimum == 1 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningAntalDoere == 5) OR (KoeretoejOplysningGrundStruktur.KoeretoejOplysningSiddepladserMinimum == 2 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningAntalDoere == 2) OR (KoeretoejOplysningGrundStruktur.KoeretoejOplysningSiddepladserMinimum >= 7 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningAntalDoere <= 3)) | STATS cars = COUNT(*) BY brand = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword, model = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.Model.KoeretoejModelTypeNavn.keyword, doors = KoeretoejOplysningGrundStruktur.KoeretoejOplysningAntalDoere, seats = KoeretoejOplysningGrundStruktur.KoeretoejOplysningSiddepladserMinimum | SORT cars DESC | LIMIT 30",
+          "queryType": "esql",
+          "refId": "A"
+        }
+      ],
+      "title": "Models of Each Rare Combo",
+      "type": "table",
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      }
+    }
+  ],
+  "refresh": "",
+  "schemaVersion": 41,
+  "style": "dark",
+  "tags": [
+    "dmr",
+    "elasticsearch"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "1900-01-01T00:00:00Z",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "DMR Door-Seat Weirdness Matrix",
+  "uid": "dmr-door-seat-matrix",
+  "version": 1,
+  "weekStart": ""
+}

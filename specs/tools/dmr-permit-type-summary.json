@@ -1,0 +1,15 @@
+{
+  "kind": "tool",
+  "id": "dmr-permit-type-summary",
+  "type": "esql",
+  "description": "Counts special permit types on registered passenger cars. Use when user asks veteran/rental/towing/chiptuning permits. Labels: Synsfri Sammenkobling, Veterankørsel, Udlejning Uden Fører, Chiptuning Godkendt.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND TilladelseSamling.Tilladelse.TilladelseStruktur.TilladelseTypeStruktur.TilladelseTypeNavn.keyword IS NOT NULL | STATS car_count = COUNT(*) BY permit_type = TilladelseSamling.Tilladelse.TilladelseStruktur.TilladelseTypeStruktur.TilladelseTypeNavn.keyword | SORT car_count DESC | LIMIT 20",
+    "params": {}
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

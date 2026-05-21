@@ -1,0 +1,15 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-emission-norm-summary",
+  "type": "esql",
+  "description": "Counts registered passenger cars by Euro emission standard. Use when user asks about Euro 6/Euro VI share or older standards. `Ingen Norm` = no standard (EVs, old cars).",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KoeretoejNormStruktur.NormTypeStruktur.NormTypeNavn.keyword IS NOT NULL | STATS car_count = COUNT(*) BY emission_standard = KoeretoejOplysningGrundStruktur.KoeretoejNormStruktur.NormTypeStruktur.NormTypeNavn.keyword | SORT car_count DESC | LIMIT 20",
+    "params": {}
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

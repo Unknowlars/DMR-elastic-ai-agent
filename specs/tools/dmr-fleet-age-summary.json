@@ -1,0 +1,15 @@
+{
+  "kind": "tool",
+  "id": "dmr-fleet-age-summary",
+  "type": "esql",
+  "description": "All-vehicle fleet size and avg/oldest/newest first-registration year. Use when user asks the all-vehicle fleet's age. Passenger-car only: dmr-car-fleet-overview.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" | EVAL first_registration_year_clean = CASE(_foerste_registrering_aar >= 1900 AND _foerste_registrering_aar <= DATE_EXTRACT(\"year\", NOW()), _foerste_registrering_aar, null) | STATS registered_vehicle_count = COUNT(*), avg_first_registration_year = AVG(first_registration_year_clean), oldest_first_registration_year = MIN(first_registration_year_clean), newest_first_registration_year = MAX(first_registration_year_clean) | LIMIT 1",
+    "params": {}
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

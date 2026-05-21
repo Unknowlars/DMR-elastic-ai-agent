@@ -1,0 +1,21 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-high-power-list",
+  "type": "esql",
+  "description": "Lists registered passenger cars above a kW threshold, sorted by valid kW. Use when user asks most powerful cars, high-performance lists, or counts above a kW level. Excludes invalid power outliers above 750 kW.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" | EVAL power_kw = KoeretoejOplysningGrundStruktur.KoeretoejMotorStruktur.KoeretoejMotorStoersteEffekt, top_speed_kmh = CLAMP(KoeretoejOplysningGrundStruktur.KoeretoejOplysningMaksimumHastighed, 50, 400) | WHERE power_kw >= ?min_power_kw AND power_kw <= 750 | KEEP KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword, KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.Model.KoeretoejModelTypeNavn.keyword, KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.Variant.KoeretoejVariantTypeNavn, KoeretoejOplysningGrundStruktur.KarrosseriTypeStruktur.KarrosseriTypeNavn.keyword, power_kw, top_speed_kmh, _drivkraft_primaer, RegistreringNummerNummer | SORT power_kw DESC | LIMIT 25",
+    "params": {
+      "min_power_kw": {
+        "type": "integer",
+        "description": "Minimum kW threshold, e.g. 200, 300, or 400.",
+        "default": 200
+      }
+    }
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

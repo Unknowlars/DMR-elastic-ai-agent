@@ -1,0 +1,21 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-age-threshold-summary",
+  "type": "esql",
+  "description": "Counts registered passenger cars first registered at or before a cutoff year. Use when user asks older-than-N-years counts. Year-based, not exact day-level.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" | EVAL first_registration_year_clean = CASE(_foerste_registrering_aar >= 1900 AND _foerste_registrering_aar <= DATE_EXTRACT(\"year\", NOW()), _foerste_registrering_aar, null), matches_age_threshold = first_registration_year_clean <= ?max_first_registration_year | STATS matching_car_count = COUNT(*) WHERE matches_age_threshold, registered_car_count = COUNT(*), oldest_first_registration_year = MIN(first_registration_year_clean), newest_matching_first_registration_year = MAX(CASE(matches_age_threshold, first_registration_year_clean, null)) | EVAL matching_share_pct = ROUND(matching_car_count * 100.0 / registered_car_count, 1) | LIMIT 1",
+    "params": {
+      "max_first_registration_year": {
+        "type": "integer",
+        "description": "Maximum first-registration year included in the count. For example, for 'more than 10 years old' during 2026, use 2015 because year-only data cannot prove whether 2016 cars have passed their exact registration anniversary.",
+        "default": 2011
+      }
+    }
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

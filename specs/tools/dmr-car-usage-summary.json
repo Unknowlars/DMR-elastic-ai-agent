@@ -1,0 +1,15 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-usage-summary",
+  "type": "esql",
+  "description": "Registered passenger cars grouped by usage category with total denominator and ES|QL-computed percentages. Use when user asks private vs taxi shares or other usage categories.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" | EVAL usage = KoeretoejAnvendelseStruktur.KoeretoejAnvendelseNavn.keyword | INLINESTATS total_registered_cars = COUNT(*) | WHERE usage IS NOT NULL | STATS total_registered_cars = MAX(total_registered_cars), vehicle_count = COUNT(*) BY usage | EVAL share_of_registered_cars_pct = ROUND(vehicle_count * 100.0 / total_registered_cars, 1) | SORT vehicle_count DESC | LIMIT 15",
+    "params": {}
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

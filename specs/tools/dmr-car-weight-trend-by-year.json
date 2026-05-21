@@ -1,0 +1,11 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-weight-trend-by-year",
+  "type": "esql",
+  "description": "Median and average kerbweight of registered passenger cars by first registration year since 1995. Use for 'are cars getting heavier over time', 'how much heavier are new cars than old cars', 'weight trend by year', or 'are modern cars fatter'. Filters to valid kerbweight range 500–5000 kg. Requires at least 1000 cars per year.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND _foerste_registrering_aar >= 1995 AND _foerste_registrering_aar <= DATE_EXTRACT(\"year\", NOW()) AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningKoereklarVaegtMinimum >= 500 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningKoereklarVaegtMinimum <= 5000 | STATS car_count = COUNT(*), p50_kerbweight_kg = ROUND(PERCENTILE(KoeretoejOplysningGrundStruktur.KoeretoejOplysningKoereklarVaegtMinimum, 50), 0), avg_kerbweight_kg = ROUND(AVG(KoeretoejOplysningGrundStruktur.KoeretoejOplysningKoereklarVaegtMinimum), 0) BY reg_year = _foerste_registrering_aar | WHERE car_count >= 1000 | SORT reg_year ASC | LIMIT 35",
+    "params": {}
+  },
+  "tags": ["domain", "dmr", "analytics"]
+}

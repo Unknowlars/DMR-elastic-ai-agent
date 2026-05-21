@@ -1,0 +1,18 @@
+{
+  "kind": "agent",
+  "id": "dataset-sampler",
+  "name": "Dataset Sampler",
+  "description": "Retrieves representative samples, summarizes document shapes, and helps decide whether a dataset is good for search, aggregation, or alerting.",
+  "instructions_file": "prompts/dataset-sampler.instructions.md",
+  "tool_ids": [
+    "platform.core.index_explorer",
+    "platform.core.search",
+    "platform.core.execute_esql"
+  ],
+  "tags": [
+    "discovery",
+    "sampling",
+    "bootstrap"
+  ]
+}
+

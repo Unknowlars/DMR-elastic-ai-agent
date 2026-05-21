@@ -1,0 +1,15 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-co2-tier-summary",
+  "type": "esql",
+  "description": "Groups current registered passenger cars into tailpipe CO2 bands. Use for under-100 or over-200 g/km questions. Excludes EVs and cars without valid CO2 values.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND _co2_g_per_km_primaer IS NOT NULL AND _co2_g_per_km_primaer > 0 AND _co2_g_per_km_primaer < 1000 | EVAL co2_tier = CASE(_co2_g_per_km_primaer < 100, \"Under 100 g/km\", _co2_g_per_km_primaer < 130, \"100-129 g/km\", _co2_g_per_km_primaer < 160, \"130-159 g/km\", _co2_g_per_km_primaer < 200, \"160-199 g/km\", \"200+ g/km\") | STATS car_count = COUNT(*) BY co2_tier | SORT car_count DESC | LIMIT 8",
+    "params": {}
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "kind": "tool",
+  "id": "dmr-fleet-status-overview",
+  "type": "esql",
+  "description": "Counts vehicles grouped by registration status and vehicle type. Use when user asks fleet composition by status, or how status differs across vehicle types.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | STATS vehicle_count = COUNT(*) BY registration_status = KoeretoejRegistreringStatus.keyword, vehicle_type = KoeretoejArtNavn.keyword | SORT vehicle_count DESC | LIMIT 50",
+    "params": {}
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

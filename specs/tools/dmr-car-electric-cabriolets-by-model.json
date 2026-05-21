@@ -1,0 +1,15 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-electric-cabriolets-by-model",
+  "type": "esql",
+  "description": "Registered electric passenger-car cabriolets grouped by brand and model. Use for electric cabriolet grouping questions.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND _drivkraft_primaer == \"El\" AND KoeretoejOplysningGrundStruktur.KarrosseriTypeStruktur.KarrosseriTypeNavn.keyword == \"Cabriolet\" | STATS car_count = COUNT(*) BY brand = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword, model = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.Model.KoeretoejModelTypeNavn.keyword | SORT car_count DESC, brand ASC, model ASC | LIMIT 50",
+    "params": {}
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

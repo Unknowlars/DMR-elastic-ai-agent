@@ -1,0 +1,25 @@
+{
+  "kind": "dataset-catalog",
+  "dataset_id": "alerts-and-security",
+  "index_patterns": [
+    ".internal.alerts-*",
+    ".security-*",
+    ".kibana-siem-rule-migrations-*"
+  ],
+  "purpose": "Elastic alerting, security solution, and related internal control-plane data.",
+  "owner": "security-or-platform",
+  "time_field": "@timestamp",
+  "key_fields": [
+    "kibana.alert.rule.name",
+    "event.kind",
+    "event.category",
+    "host.name"
+  ],
+  "sensitive_fields": [],
+  "notes": [
+    "The cluster includes multiple internal alerting indices spanning observability, security, ML, SLO, and stack alerts.",
+    "Use caution when building custom tools here; keep scopes narrow and prefer summaries over raw hit retrieval."
+  ],
+  "status": "candidate"
+}
+

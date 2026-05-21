@@ -1,0 +1,26 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-cylinder-brand-model-list",
+  "type": "esql",
+  "description": "Lists current registered passenger-car brand/model groups within a cylinder-count range. Use for V8, V12, V16, or range lists. For overall cylinder totals use dmr-car-cylinder-count-summary.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KoeretoejMotorStruktur.KoeretoejMotorCylinderAntal IS NOT NULL AND KoeretoejOplysningGrundStruktur.KoeretoejMotorStruktur.KoeretoejMotorCylinderAntal >= ?min_cylinders AND KoeretoejOplysningGrundStruktur.KoeretoejMotorStruktur.KoeretoejMotorCylinderAntal <= ?max_cylinders AND KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword IS NOT NULL AND KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.Model.KoeretoejModelTypeNavn.keyword IS NOT NULL | STATS car_count = COUNT(*) BY cylinders = KoeretoejOplysningGrundStruktur.KoeretoejMotorStruktur.KoeretoejMotorCylinderAntal, brand = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword, model = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.Model.KoeretoejModelTypeNavn.keyword | SORT cylinders DESC, car_count DESC, brand ASC, model ASC | LIMIT 200",
+    "params": {
+      "min_cylinders": {
+        "type": "integer",
+        "description": "Lower cylinder bound, e.g. 12 for V12+.",
+        "default": 8
+      },
+      "max_cylinders": {
+        "type": "integer",
+        "description": "Upper cylinder bound, e.g. 16 for V12-V16.",
+        "default": 16
+      }
+    }
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

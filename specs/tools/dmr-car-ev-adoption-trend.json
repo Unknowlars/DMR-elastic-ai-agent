@@ -1,0 +1,15 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-ev-adoption-trend",
+  "type": "esql",
+  "description": "Year-by-year first-registered passenger cars by primary fuel (all statuses). Use when user asks EV adoption over time or fuel-trend by year. Historical, not current snapshot.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejArtNavn.keyword == \"Personbil\" AND _foerste_registrering_aar IS NOT NULL AND _foerste_registrering_aar >= 2000 AND _foerste_registrering_aar <= 2030 AND _drivkraft_primaer IS NOT NULL | STATS total = COUNT(*), electric = COUNT(*) WHERE _drivkraft_primaer == \"El\", diesel = COUNT(*) WHERE _drivkraft_primaer == \"Diesel\", petrol = COUNT(*) WHERE _drivkraft_primaer == \"Benzin\" BY registration_year = _foerste_registrering_aar | SORT registration_year ASC | LIMIT 30",
+    "params": {}
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

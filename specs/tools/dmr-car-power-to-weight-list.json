@@ -1,0 +1,20 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-power-to-weight-list",
+  "type": "esql",
+  "description": "Lists registered passenger cars above a kW/kg threshold, sorted by kW/kg. Use when user asks best driver's cars or performance-per-kg lists. 0.10 sporty, 0.15 performance, 0.20+ supercar.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" | EVAL power_kw = CASE(KoeretoejOplysningGrundStruktur.KoeretoejMotorStruktur.KoeretoejMotorStoersteEffekt >= 1 AND KoeretoejOplysningGrundStruktur.KoeretoejMotorStruktur.KoeretoejMotorStoersteEffekt <= 750, KoeretoejOplysningGrundStruktur.KoeretoejMotorStruktur.KoeretoejMotorStoersteEffekt, NULL), kerb_weight_kg = CASE(KoeretoejOplysningGrundStruktur.KoeretoejOplysningKoereklarVaegtMinimum >= 300 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningKoereklarVaegtMinimum <= 5000, KoeretoejOplysningGrundStruktur.KoeretoejOplysningKoereklarVaegtMinimum, null), pw_ratio_kw_per_kg = power_kw / kerb_weight_kg | WHERE power_kw IS NOT NULL | WHERE pw_ratio_kw_per_kg >= ?min_pw_ratio | KEEP KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword, KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.Model.KoeretoejModelTypeNavn.keyword, KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.Variant.KoeretoejVariantTypeNavn, power_kw, kerb_weight_kg, pw_ratio_kw_per_kg, _drivkraft_primaer, RegistreringNummerNummer | SORT pw_ratio_kw_per_kg DESC | LIMIT 25",
+    "params": {
+      "min_pw_ratio": {
+        "type": "float",
+        "description": "Minimum kW/kg ratio: 0.10 sporty, 0.15 performance, 0.20+ supercar-level."
+      }
+    }
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "kind": "tool",
+  "id": "dmr-top-models",
+  "type": "esql",
+  "description": "Returns the most common brand and model combinations among currently registered vehicles in Denmark. Use for questions about top models or which specific models dominate the fleet.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" | STATS vehicle_count = COUNT(*) BY brand = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword, model = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.Model.KoeretoejModelTypeNavn.keyword | SORT vehicle_count DESC | LIMIT 20",
+    "params": {}
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

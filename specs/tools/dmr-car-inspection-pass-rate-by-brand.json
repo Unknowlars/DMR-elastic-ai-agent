@@ -1,0 +1,15 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-inspection-pass-rate-by-brand",
+  "type": "esql",
+  "description": "Pass rates by brand using live inspection outcome labels. Conditional = requires re-inspection. Failed = not approved. Note: results reflect the most recent stored inspection record per car, not a full inspection history. Fleet age influences pass rates.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND SynResultatStruktur.SynResultatSynsResultat.keyword IS NOT NULL AND KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword IS NOT NULL | STATS total = COUNT(*), approved = COUNT(*) WHERE SynResultatStruktur.SynResultatSynsResultat.keyword == \"Godkendt\", conditional = COUNT(*) WHERE SynResultatStruktur.SynResultatSynsResultat.keyword == \"KanGodkendesVedOmsynAfOmsynsvirksomhed\" OR SynResultatStruktur.SynResultatSynsResultat.keyword == \"KanGodkendesVedOmsynAfSynsvirksomhed\", failed = COUNT(*) WHERE SynResultatStruktur.SynResultatSynsResultat.keyword == \"IkkeGodkendt\" OR SynResultatStruktur.SynResultatSynsResultat.keyword == \"IkkeGodkendtKanGenfremstilles\" BY brand = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword | WHERE total >= 1000 | EVAL pass_pct = ROUND(approved * 100.0 / total, 1), conditional_pct = ROUND(conditional * 100.0 / total, 1), fail_pct = ROUND(failed * 100.0 / total, 1) | SORT pass_pct DESC, total DESC | LIMIT 40",
+    "params": {}
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

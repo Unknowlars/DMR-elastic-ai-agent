@@ -1,0 +1,15 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-fleet-overview",
+  "type": "esql",
+  "description": "Registered passenger-car count, avg age, avg model year, avg total weight. Use when user asks fleet size, age, or weight overview. All-vehicle variant: dmr-fleet-age-summary.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" | EVAL first_registration_year_clean = CASE(_foerste_registrering_aar >= 1900 AND _foerste_registrering_aar <= DATE_EXTRACT(\"year\", NOW()), _foerste_registrering_aar, null), model_year_clean = CASE(KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar >= 1950 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar <= DATE_EXTRACT(\"year\", NOW()) + 1, KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar, null), total_weight_clean = CASE(KoeretoejOplysningGrundStruktur.KoeretoejOplysningTotalVaegt >= 300 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningTotalVaegt <= 10000, KoeretoejOplysningGrundStruktur.KoeretoejOplysningTotalVaegt, null) | STATS registered_car_count = COUNT(*), avg_first_registration_year = AVG(first_registration_year_clean), oldest_first_registration_year = MIN(first_registration_year_clean), newest_first_registration_year = MAX(first_registration_year_clean), avg_model_year = AVG(model_year_clean), avg_total_weight = AVG(total_weight_clean) | LIMIT 1",
+    "params": {}
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

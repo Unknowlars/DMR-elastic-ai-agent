@@ -1,0 +1,15 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-accident-summary",
+  "type": "esql",
+  "description": "Counts registered passenger cars with Trafikskade accident-damage flag, with top brands. Use when user asks accident-flag counts or affected brands. Registry flag only, not full history.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningTrafikskade == true | STATS car_count = COUNT(*) BY brand = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword | SORT car_count DESC | LIMIT 20",
+    "params": {}
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

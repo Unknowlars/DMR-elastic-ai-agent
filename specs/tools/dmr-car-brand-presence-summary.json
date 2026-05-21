@@ -1,0 +1,21 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-brand-presence-summary",
+  "type": "esql",
+  "description": "All-time and current passenger-car presence for a brand LIKE pattern. Use when user asks how many [brand] cars ever appeared in Denmark vs current survivors. Current-only: dmr-car-brand-count.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword IS NOT NULL | WHERE KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword LIKE ?brand_pattern | STATS all_time_car_count = COUNT(*), currently_registered_car_count = COUNT(*) WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\", first_registration_year = MIN(_foerste_registrering_aar), latest_registration_year = MAX(_foerste_registrering_aar) BY brand = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword | SORT all_time_car_count DESC | LIMIT 20",
+    "params": {
+      "brand_pattern": {
+        "type": "string",
+        "description": "ES|QL LIKE pattern for the brand name. Use the likely canonical brand name or a wildcard form when needed, for example LADA, *LADA*, Mercedes*, or *Mercedes*."
+      }
+    }
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics",
+    "historical"
+  ]
+}

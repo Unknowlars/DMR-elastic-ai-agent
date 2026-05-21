@@ -1,0 +1,20 @@
+{
+  "kind": "tool",
+  "id": "dmr-lookup-by-vehicle-id",
+  "type": "esql",
+  "description": "Looks up a single Danish vehicle by exact KoeretoejIdent. Use when the user provides the internal DMR vehicle ID and wants the corresponding vehicle record and key registry fields.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejIdent == ?vehicle_id | KEEP RegistreringNummerNummer, KoeretoejIdent, KoeretoejArtNavn, KoeretoejRegistreringStatus, KoeretoejRegistreringStatusDato, KoeretoejOplysningGrundStruktur.KoeretoejOplysningFoersteRegistreringDato, KoeretoejOplysningGrundStruktur.KoeretoejOplysningStelNummer, KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn, KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.Model.KoeretoejModelTypeNavn, KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.Variant.KoeretoejVariantTypeNavn, KoeretoejOplysningGrundStruktur.KarrosseriTypeStruktur.KarrosseriTypeNavn, _drivkraft_primaer, _co2_g_per_km_primaer, _km_per_liter_primaer | LIMIT 5",
+    "params": {
+      "vehicle_id": {
+        "type": "integer",
+        "description": "Exact KoeretoejIdent value"
+      }
+    }
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "lookup"
+  ]
+}

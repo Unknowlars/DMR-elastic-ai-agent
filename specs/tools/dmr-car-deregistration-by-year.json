@@ -1,0 +1,16 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-deregistration-by-year",
+  "type": "esql",
+  "description": "Counts passenger cars currently no longer registered, grouped by current status-date year. Use for annual deregistration/removal volume. Caveat: current non-registered status date, not a full lifecycle event log.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejRegistreringStatus.keyword != \"Registreret\" AND KoeretoejRegistreringStatusDato IS NOT NULL | EVAL deregistration_year = DATE_EXTRACT(\"year\", KoeretoejRegistreringStatusDato) | WHERE deregistration_year >= 1990 AND deregistration_year <= 2030 | STATS car_count = COUNT(*) BY deregistration_year, status = KoeretoejRegistreringStatus.keyword | SORT deregistration_year DESC, car_count DESC | LIMIT 80",
+    "params": {}
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics",
+    "historical"
+  ]
+}

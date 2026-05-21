@@ -1,0 +1,16 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-forgotten-brands",
+  "type": "esql",
+  "description": "Finds passenger-car brands once common in Denmark but now with small surviving registered fleets. Use for disappeared, forgotten, or nearly gone brands. Requires substantial historical volume.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword IS NOT NULL | STATS all_time = COUNT(*), current = COUNT(*) WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" BY brand = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword | EVAL gone_pct = ROUND((all_time - current) * 100.0 / all_time, 1) | WHERE all_time >= 5000 AND gone_pct >= 90 | SORT all_time DESC | LIMIT 30",
+    "params": {}
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics",
+    "historical"
+  ]
+}

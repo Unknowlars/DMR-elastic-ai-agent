@@ -1,0 +1,15 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-age-band-summary",
+  "type": "esql",
+  "description": "Counts current registered passenger cars in fixed first-registration-year age bands. Use for broad age-cohort questions. For exact thresholds such as older than 10 years, use dmr-car-age-threshold-summary.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND _foerste_registrering_aar IS NOT NULL AND _foerste_registrering_aar >= 1900 AND _foerste_registrering_aar <= 2030 | EVAL age_band = CASE(_foerste_registrering_aar < 2005, \"Before 2005\", _foerste_registrering_aar < 2010, \"2005-2009\", _foerste_registrering_aar < 2015, \"2010-2014\", _foerste_registrering_aar < 2020, \"2015-2019\", _foerste_registrering_aar < 2023, \"2020-2022\", \"2023 or newer\") | STATS car_count = COUNT(*) BY age_band | SORT car_count DESC | LIMIT 10",
+    "params": {}
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "kind": "agent",
+  "id": "dmr-history",
+  "name": "DMR Historical Analyst",
+  "description": "Small-model focused DMR agent for decade trends, EV adoption, registration history, brand arrival timelines, veteran cars, diesel rise/fall, and 100-year fleet evolution. Redirects uncovered analytical edge cases to dmr-analyst.",
+  "instructions_file": "prompts/dmr-history.instructions.md",
+  "skill_ids": [
+    "dmr-glossary",
+    "dmr-fun-facts"
+  ],
+  "tool_ids": [
+    "dmr-registration-trends",
+    "dmr-car-age-band-summary",
+    "dmr-car-age-threshold-summary",
+    "dmr-car-ev-adoption-trend",
+    "dmr-car-co2-by-year",
+    "dmr-car-registration-by-month",
+    "dmr-car-decade-profile",
+    "dmr-car-body-style-by-decade",
+    "dmr-car-cylinder-count-by-decade",
+    "dmr-car-wheelbase-by-decade",
+    "dmr-car-noise-by-decade",
+    "dmr-car-ncap-adoption-by-year",
+    "dmr-car-deregistration-by-year",
+    "dmr-car-deregistration-age-summary",
+    "dmr-car-diesel-particle-filter-adoption",
+    "dmr-car-model-year-lag-summary",
+    "dmr-car-forgotten-brands",
+    "dmr-car-veteran-summary",
+    "dmr-car-veteran-share-by-brand",
+    "dmr-car-oldest-brands",
+    "dmr-car-newest-brands",
+    "dmr-car-brand-presence-summary",
+    "dmr-car-surviving-by-decade",
+    "dmr-car-all-time-top-models"
+  ]
+}

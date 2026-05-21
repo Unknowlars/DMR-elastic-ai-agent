@@ -1,0 +1,15 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-weight-distribution",
+  "type": "esql",
+  "description": "Gross-weight and kerbweight avg/percentiles for registered passenger cars by fuel type. Use when user asks typical or P90 weight, or whether EVs are heavier than petrol cars.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" | EVAL total_weight_clean = CASE(KoeretoejOplysningGrundStruktur.KoeretoejOplysningTotalVaegt >= 300 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningTotalVaegt <= 10000, KoeretoejOplysningGrundStruktur.KoeretoejOplysningTotalVaegt, null), kerb_weight_clean = CASE(KoeretoejOplysningGrundStruktur.KoeretoejOplysningKoereklarVaegtMinimum >= 300 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningKoereklarVaegtMinimum <= 5000, KoeretoejOplysningGrundStruktur.KoeretoejOplysningKoereklarVaegtMinimum, null) | STATS car_count = COUNT(*), avg_total_weight_kg = AVG(total_weight_clean), p50_total_weight_kg = PERCENTILE(total_weight_clean, 50), p90_total_weight_kg = PERCENTILE(total_weight_clean, 90), avg_kerb_weight_kg = AVG(kerb_weight_clean), p50_kerb_weight_kg = PERCENTILE(kerb_weight_clean, 50) BY fuel = _drivkraft_primaer | SORT car_count DESC | LIMIT 10",
+    "params": {}
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

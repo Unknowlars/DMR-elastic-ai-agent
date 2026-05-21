@@ -1,0 +1,20 @@
+{
+  "kind": "tool",
+  "id": "dmr-lookup-by-registration-number",
+  "type": "esql",
+  "description": "Looks up one registered passenger car by exact registration number (plate) and returns the core flat-view vehicle details. Use when the user provides a single number plate. Call exactly once per question — do not call this tool twice for the same plate.",
+  "configuration": {
+    "query": "FROM dmr-cars-flat | WHERE plate == ?registration_number | KEEP plate, vehicle_id, vin, brand, model, variant, year, first_reg_date, fuel, color, body_style, usage, power_kw, speed_kmh, cylinders, displacement_cc, kerb_kg, towing_kg, unbraked_towing_kg, co2_gkm, km_per_liter, euro_norm, inspection_result, inspection_date, blocking_reason, is_leased, is_veteran, is_accident_damaged | LIMIT 5",
+    "params": {
+      "registration_number": {
+        "type": "string",
+        "description": "Exact Danish registration number, for example EN44360"
+      }
+    }
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "lookup"
+  ]
+}

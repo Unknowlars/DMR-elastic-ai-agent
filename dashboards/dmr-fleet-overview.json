@@ -1,0 +1,232 @@
+{
+  "title": "DMR Fleet Overview",
+  "description": "Repo-backed Kibana dashboard for current registered Danish passenger-car fleet composition in dmr-raw-000002.",
+  "panels": [
+    {
+      "type": "vis",
+      "id": "registered-passenger-cars",
+      "grid": { "x": 0, "y": 0, "w": 12, "h": 5 },
+      "config": {
+        "title": "",
+        "type": "metric",
+        "data_source": {
+          "type": "esql",
+          "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" | STATS registered_cars = COUNT(*) | LIMIT 1"
+        },
+        "metrics": [
+          {
+            "type": "primary",
+            "column": "registered_cars",
+            "label": "Registered Passenger Cars",
+            "format": { "type": "number", "decimals": 0, "compact": true }
+          }
+        ]
+      }
+    },
+    {
+      "type": "vis",
+      "id": "electric-passenger-cars",
+      "grid": { "x": 12, "y": 0, "w": 12, "h": 5 },
+      "config": {
+        "title": "",
+        "type": "metric",
+        "data_source": {
+          "type": "esql",
+          "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" | STATS electric_cars = COUNT(*) WHERE _drivkraft_primaer == \"El\" | LIMIT 1"
+        },
+        "metrics": [
+          {
+            "type": "primary",
+            "column": "electric_cars",
+            "label": "Electric Cars",
+            "format": { "type": "number", "decimals": 0, "compact": true }
+          }
+        ]
+      }
+    },
+    {
+      "type": "vis",
+      "id": "leased-passenger-cars",
+      "grid": { "x": 24, "y": 0, "w": 12, "h": 5 },
+      "config": {
+        "title": "",
+        "type": "metric",
+        "data_source": {
+          "type": "esql",
+          "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" | STATS total_cars = COUNT(*), leased_cars = COUNT(*) WHERE LeasingGyldigFra IS NOT NULL | EVAL leased_share = 1.0 * leased_cars / total_cars | LIMIT 1"
+        },
+        "metrics": [
+          {
+            "type": "primary",
+            "column": "leased_cars",
+            "label": "Leased Cars",
+            "format": { "type": "number", "decimals": 0, "compact": true }
+          },
+          {
+            "type": "secondary",
+            "column": "leased_share",
+            "label": "Lease Share",
+            "format": { "type": "percent", "decimals": 1 }
+          }
+        ]
+      }
+    },
+    {
+      "type": "vis",
+      "id": "average-model-year",
+      "grid": { "x": 36, "y": 0, "w": 12, "h": 5 },
+      "config": {
+        "title": "",
+        "type": "metric",
+        "data_source": {
+          "type": "esql",
+          "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" | EVAL model_year_clean = CASE(KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar >= 1950 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar <= DATE_EXTRACT(\"year\", NOW()) + 1, KoeretoejOplysningGrundStruktur.KoeretoejOplysningModelAar, null) | STATS avg_model_year = AVG(model_year_clean) | LIMIT 1"
+        },
+        "metrics": [
+          {
+            "type": "primary",
+            "column": "avg_model_year",
+            "label": "Average Model Year",
+            "format": { "type": "number", "decimals": 1 }
+          }
+        ]
+      }
+    },
+    {
+      "type": "vis",
+      "id": "fuel-mix",
+      "grid": { "x": 0, "y": 5, "w": 24, "h": 10 },
+      "config": {
+        "title": "Fuel Mix",
+        "type": "pie",
+        "data_source": {
+          "type": "esql",
+          "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND _drivkraft_primaer IS NOT NULL | STATS car_count = COUNT(*) BY primary_fuel = _drivkraft_primaer | SORT car_count DESC | LIMIT 10"
+        },
+        "metrics": [{ "column": "car_count", "format": { "type": "number", "decimals": 0, "compact": true } }],
+        "group_by": [{ "column": "primary_fuel" }]
+      }
+    },
+    {
+      "type": "vis",
+      "id": "top-brands",
+      "grid": { "x": 24, "y": 5, "w": 24, "h": 10 },
+      "config": {
+        "title": "Top Passenger-Car Brands",
+        "type": "xy",
+        "axis": {
+          "x": { "title": { "visible": false } },
+          "y": { "title": { "visible": false } }
+        },
+        "layers": [
+          {
+            "type": "bar_horizontal",
+            "data_source": {
+              "type": "esql",
+              "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" | STATS car_count = COUNT(*) BY brand = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword | WHERE brand IS NOT NULL | SORT car_count DESC | LIMIT 15"
+            },
+            "x": { "column": "brand" },
+            "y": [{ "column": "car_count", "format": { "type": "number", "decimals": 0, "compact": true } }]
+          }
+        ]
+      }
+    },
+    {
+      "type": "vis",
+      "id": "top-models",
+      "grid": { "x": 0, "y": 15, "w": 24, "h": 10 },
+      "config": {
+        "title": "Top Passenger-Car Models",
+        "type": "xy",
+        "axis": {
+          "x": { "title": { "visible": false } },
+          "y": { "title": { "visible": false } }
+        },
+        "layers": [
+          {
+            "type": "bar_horizontal",
+            "data_source": {
+              "type": "esql",
+              "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" | EVAL brand = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword, model = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.Model.KoeretoejModelTypeNavn.keyword | WHERE brand IS NOT NULL AND model IS NOT NULL | EVAL brand_model = CONCAT(brand, \" \", model) | STATS car_count = COUNT(*) BY brand_model | SORT car_count DESC | LIMIT 15"
+            },
+            "x": { "column": "brand_model" },
+            "y": [{ "column": "car_count", "format": { "type": "number", "decimals": 0, "compact": true } }]
+          }
+        ]
+      }
+    },
+    {
+      "type": "vis",
+      "id": "registrations-by-year",
+      "grid": { "x": 24, "y": 15, "w": 24, "h": 10 },
+      "config": {
+        "title": "Current Fleet by First Registration Year",
+        "type": "xy",
+        "axis": {
+          "x": { "title": { "visible": false } },
+          "y": { "title": { "visible": false } }
+        },
+        "layers": [
+          {
+            "type": "bar",
+            "data_source": {
+              "type": "esql",
+              "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND _foerste_registrering_aar IS NOT NULL AND _foerste_registrering_aar >= 1980 AND _foerste_registrering_aar <= DATE_EXTRACT(\"year\", NOW()) | STATS car_count = COUNT(*) BY registration_year = _foerste_registrering_aar | SORT registration_year ASC | LIMIT 60"
+            },
+            "x": { "column": "registration_year" },
+            "y": [{ "column": "car_count", "format": { "type": "number", "decimals": 0, "compact": true } }]
+          }
+        ]
+      }
+    },
+    {
+      "type": "vis",
+      "id": "body-style-mix",
+      "grid": { "x": 0, "y": 25, "w": 24, "h": 10 },
+      "config": {
+        "title": "Body Style Mix",
+        "type": "xy",
+        "axis": {
+          "x": { "title": { "visible": false } },
+          "y": { "title": { "visible": false } }
+        },
+        "layers": [
+          {
+            "type": "bar_horizontal",
+            "data_source": {
+              "type": "esql",
+              "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KarrosseriTypeStruktur.KarrosseriTypeNavn.keyword IS NOT NULL | STATS car_count = COUNT(*) BY body_style = KoeretoejOplysningGrundStruktur.KarrosseriTypeStruktur.KarrosseriTypeNavn.keyword | SORT car_count DESC | LIMIT 12"
+            },
+            "x": { "column": "body_style" },
+            "y": [{ "column": "car_count", "format": { "type": "number", "decimals": 0, "compact": true } }]
+          }
+        ]
+      }
+    },
+    {
+      "type": "vis",
+      "id": "colour-mix",
+      "grid": { "x": 24, "y": 25, "w": 24, "h": 10 },
+      "config": {
+        "title": "Colour Mix",
+        "type": "xy",
+        "axis": {
+          "x": { "title": { "visible": false } },
+          "y": { "title": { "visible": false } }
+        },
+        "layers": [
+          {
+            "type": "bar_horizontal",
+            "data_source": {
+              "type": "esql",
+              "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KoeretoejFarveStruktur.FarveTypeStruktur.FarveTypeNavn.keyword IS NOT NULL | EVAL colour = KoeretoejOplysningGrundStruktur.KoeretoejFarveStruktur.FarveTypeStruktur.FarveTypeNavn.keyword | WHERE colour != \"Ukendt\" | STATS car_count = COUNT(*) BY colour | SORT car_count DESC | LIMIT 12"
+            },
+            "x": { "column": "colour" },
+            "y": [{ "column": "car_count", "format": { "type": "number", "decimals": 0, "compact": true } }]
+          }
+        ]
+      }
+    }
+  ],
+  "time_range": { "from": "now-30d", "to": "now" }
+}

@@ -1,0 +1,48 @@
+name: dmr-grafana
+
+x-common-env: &common-env
+  TZ: ${TZ:-Europe/Copenhagen}
+
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: ${LOG_MAX_SIZE:-50m}
+    max-file: ${LOG_MAX_FILE:-3}
+
+services:
+  grafana:
+    image: ${GRAFANA_IMAGE:-grafana/grafana:latest}
+    hostname: grafana
+    restart: unless-stopped
+    init: true
+    environment:
+      <<: *common-env
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin}
+      GF_AUTH_ANONYMOUS_ENABLED: ${GF_AUTH_ANONYMOUS_ENABLED:-false}
+      GF_FEATURE_TOGGLES_ENABLE: ${GF_FEATURE_TOGGLES_ENABLE:-elasticsearchESQLQuery}
+      GF_USERS_DEFAULT_THEME: ${GF_USERS_DEFAULT_THEME:-light}
+      ELASTICSEARCH_URL: ${ELASTICSEARCH_URL:?set ELASTICSEARCH_URL in .env}
+      ELASTICSEARCH_API_KEY: ${ELASTICSEARCH_API_KEY:?set ELASTICSEARCH_API_KEY in .env}
+      ELASTICSEARCH_INSECURE: ${ELASTICSEARCH_INSECURE:-false}
+      ES_INDEX: ${ES_INDEX:-dmr-raw-000002}
+      GRAFANA_DATASOURCE_NAME: ${GRAFANA_DATASOURCE_NAME:-DMR Elasticsearch}
+    ports:
+      - "${GRAFANA_PORT:-3009}:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources:ro
+      - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+    cpus: ${GRAFANA_CPUS:-2.0}
+    mem_limit: ${GRAFANA_MEM_LIMIT:-2g}
+    logging: *default-logging
+    networks:
+      - dmr-grafana
+
+volumes:
+  grafana-data:
+
+networks:
+  dmr-grafana:
+    driver: bridge

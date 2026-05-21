@@ -1,0 +1,15 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-cylinder-count-summary",
+  "type": "esql",
+  "description": "Cylinder-count distribution of currently registered passenger cars. Use when user asks how many 3-cyl, V6, V8, V12, or 0-cyl EVs are in the fleet. Filters implausible values.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KoeretoejMotorStruktur.KoeretoejMotorCylinderAntal IS NOT NULL AND KoeretoejOplysningGrundStruktur.KoeretoejMotorStruktur.KoeretoejMotorCylinderAntal >= 0 AND KoeretoejOplysningGrundStruktur.KoeretoejMotorStruktur.KoeretoejMotorCylinderAntal <= 16 | STATS car_count = COUNT(*) BY cylinders = KoeretoejOplysningGrundStruktur.KoeretoejMotorStruktur.KoeretoejMotorCylinderAntal | SORT cylinders ASC | LIMIT 20",
+    "params": {}
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

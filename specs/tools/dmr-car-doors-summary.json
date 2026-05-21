@@ -1,0 +1,15 @@
+{
+  "kind": "tool",
+  "id": "dmr-car-doors-summary",
+  "type": "esql",
+  "description": "Registered passenger cars grouped by door count and body style. Use when user asks 2/3/5-door share or door-by-body-style breakdown. Filters invalid values.",
+  "configuration": {
+    "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningAntalDoere IS NOT NULL AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningAntalDoere >= 2 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningAntalDoere <= 6 | STATS car_count = COUNT(*) BY doors = KoeretoejOplysningGrundStruktur.KoeretoejOplysningAntalDoere, body_style = KoeretoejOplysningGrundStruktur.KarrosseriTypeStruktur.KarrosseriTypeNavn.keyword | SORT car_count DESC | LIMIT 25",
+    "params": {}
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "analytics"
+  ]
+}

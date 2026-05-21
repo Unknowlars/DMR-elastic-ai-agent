@@ -1,0 +1,265 @@
+{
+  "title": "DMR Performance, History & Market",
+  "description": "Repo-backed Kibana dashboard for Danish passenger-car performance, registration history, inspections, leasing, and rarity in dmr-raw-000002.",
+  "panels": [
+    {
+      "type": "vis",
+      "id": "average-power-kw",
+      "grid": { "x": 0, "y": 0, "w": 12, "h": 5 },
+      "config": {
+        "title": "",
+        "type": "metric",
+        "data_source": {
+          "type": "esql",
+          "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" | EVAL power_kw = CLAMP(KoeretoejOplysningGrundStruktur.KoeretoejMotorStruktur.KoeretoejMotorStoersteEffekt, 1, 750) | STATS avg_power_kw = AVG(power_kw) | LIMIT 1"
+        },
+        "metrics": [
+          {
+            "type": "primary",
+            "column": "avg_power_kw",
+            "label": "Average Power kW",
+            "format": { "type": "number", "decimals": 1 }
+          }
+        ]
+      }
+    },
+    {
+      "type": "vis",
+      "id": "power-percentiles",
+      "grid": { "x": 12, "y": 0, "w": 12, "h": 5 },
+      "config": {
+        "title": "",
+        "type": "metric",
+        "data_source": {
+          "type": "esql",
+          "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" | EVAL power_kw = CLAMP(KoeretoejOplysningGrundStruktur.KoeretoejMotorStruktur.KoeretoejMotorStoersteEffekt, 1, 750) | STATS p90_power_kw = PERCENTILE(power_kw, 90), p99_power_kw = PERCENTILE(power_kw, 99) | LIMIT 1"
+        },
+        "metrics": [
+          {
+            "type": "primary",
+            "column": "p90_power_kw",
+            "label": "P90 Power kW",
+            "format": { "type": "number", "decimals": 0 }
+          },
+          {
+            "type": "secondary",
+            "column": "p99_power_kw",
+            "label": "P99 Power kW",
+            "format": { "type": "number", "decimals": 0 }
+          }
+        ]
+      }
+    },
+    {
+      "type": "vis",
+      "id": "average-gross-weight",
+      "grid": { "x": 24, "y": 0, "w": 12, "h": 5 },
+      "config": {
+        "title": "",
+        "type": "metric",
+        "data_source": {
+          "type": "esql",
+          "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" | EVAL gross_weight_kg = CASE(KoeretoejOplysningGrundStruktur.KoeretoejOplysningTotalVaegt >= 300 AND KoeretoejOplysningGrundStruktur.KoeretoejOplysningTotalVaegt <= 10000, KoeretoejOplysningGrundStruktur.KoeretoejOplysningTotalVaegt, null) | STATS avg_gross_weight_kg = AVG(gross_weight_kg) | LIMIT 1"
+        },
+        "metrics": [
+          {
+            "type": "primary",
+            "column": "avg_gross_weight_kg",
+            "label": "Average Gross Weight kg",
+            "format": { "type": "number", "decimals": 0 }
+          }
+        ]
+      }
+    },
+    {
+      "type": "vis",
+      "id": "inspection-lease-headlines",
+      "grid": { "x": 36, "y": 0, "w": 12, "h": 5 },
+      "config": {
+        "title": "",
+        "type": "metric",
+        "data_source": {
+          "type": "esql",
+          "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" | STATS total_cars = COUNT(*), leased_cars = COUNT(*) WHERE LeasingGyldigFra IS NOT NULL, inspection_records = COUNT(*) WHERE SynResultatStruktur.SynResultatSynsResultat.keyword IS NOT NULL | EVAL leased_share = 1.0 * leased_cars / total_cars | LIMIT 1"
+        },
+        "metrics": [
+          {
+            "type": "primary",
+            "column": "leased_share",
+            "label": "Lease Share",
+            "format": { "type": "percent", "decimals": 1 }
+          },
+          {
+            "type": "secondary",
+            "column": "inspection_records",
+            "label": "Inspection Result Records",
+            "format": { "type": "number", "decimals": 0, "compact": true }
+          }
+        ]
+      }
+    },
+    {
+      "type": "vis",
+      "id": "above-average-power-brands",
+      "grid": { "x": 0, "y": 5, "w": 24, "h": 10 },
+      "config": {
+        "title": "Above-Average Power Brands",
+        "type": "xy",
+        "axis": {
+          "x": { "title": { "visible": false } },
+          "y": { "title": { "visible": false } }
+        },
+        "layers": [
+          {
+            "type": "bar_horizontal",
+            "data_source": {
+              "type": "esql",
+              "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" | EVAL power_kw = CLAMP(KoeretoejOplysningGrundStruktur.KoeretoejMotorStruktur.KoeretoejMotorStoersteEffekt, 1, 750) | WHERE power_kw IS NOT NULL | INLINE STATS fleet_avg_kw = AVG(power_kw) | STATS brand_avg_kw = AVG(power_kw), fleet_avg_kw = MAX(fleet_avg_kw), car_count = COUNT(*) BY brand = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword | WHERE brand IS NOT NULL AND car_count >= 100 AND brand_avg_kw > fleet_avg_kw | SORT brand_avg_kw DESC | LIMIT 15"
+            },
+            "x": { "column": "brand" },
+            "y": [{ "column": "brand_avg_kw", "format": { "type": "number", "decimals": 0 } }]
+          }
+        ]
+      }
+    },
+    {
+      "type": "vis",
+      "id": "power-tiers",
+      "grid": { "x": 24, "y": 5, "w": 24, "h": 10 },
+      "config": {
+        "title": "Power Tiers",
+        "type": "xy",
+        "axis": {
+          "x": { "title": { "visible": false } },
+          "y": { "title": { "visible": false } }
+        },
+        "layers": [
+          {
+            "type": "bar",
+            "data_source": {
+              "type": "esql",
+              "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" | EVAL power_kw = CLAMP(KoeretoejOplysningGrundStruktur.KoeretoejMotorStruktur.KoeretoejMotorStoersteEffekt, 1, 750) | WHERE power_kw IS NOT NULL | EVAL power_tier = CASE(power_kw < 60, \"Economy\", power_kw < 120, \"Family\", power_kw < 200, \"Executive\", power_kw <= 400, \"Performance\", \"Exotic\") | STATS car_count = COUNT(*) BY power_tier | SORT car_count DESC | LIMIT 10"
+            },
+            "x": { "column": "power_tier" },
+            "y": [{ "column": "car_count", "format": { "type": "number", "decimals": 0, "compact": true } }]
+          }
+        ]
+      }
+    },
+    {
+      "type": "vis",
+      "id": "ev-adoption-by-year",
+      "grid": { "x": 0, "y": 15, "w": 48, "h": 10 },
+      "config": {
+        "title": "EV Adoption by First Registration Year",
+        "type": "xy",
+        "axis": {
+          "x": { "title": { "visible": false } },
+          "y": { "title": { "visible": false } }
+        },
+        "layers": [
+          {
+            "type": "line",
+            "data_source": {
+              "type": "esql",
+              "query": "FROM dmr-raw-000002 | WHERE KoeretoejArtNavn.keyword == \"Personbil\" AND _foerste_registrering_aar IS NOT NULL AND _foerste_registrering_aar >= 2000 AND _foerste_registrering_aar <= DATE_EXTRACT(\"year\", NOW()) AND _drivkraft_primaer IS NOT NULL | STATS total_cars = COUNT(*), electric_cars = COUNT(*) WHERE _drivkraft_primaer == \"El\" BY registration_year = _foerste_registrering_aar | EVAL ev_share = 1.0 * electric_cars / total_cars | SORT registration_year ASC | LIMIT 40"
+            },
+            "x": { "column": "registration_year" },
+            "y": [{ "column": "ev_share", "label": "EV Share", "format": { "type": "percent", "decimals": 1 } }]
+          }
+        ]
+      }
+    },
+    {
+      "type": "vis",
+      "id": "co2-trend-by-year",
+      "grid": { "x": 0, "y": 25, "w": 48, "h": 10 },
+      "config": {
+        "title": "CO2 Trend by First Registration Year",
+        "type": "xy",
+        "axis": {
+          "x": { "title": { "visible": false } },
+          "y": { "title": { "visible": false } }
+        },
+        "layers": [
+          {
+            "type": "line",
+            "data_source": {
+              "type": "esql",
+              "query": "FROM dmr-raw-000002 | WHERE KoeretoejArtNavn.keyword == \"Personbil\" AND _foerste_registrering_aar IS NOT NULL AND _foerste_registrering_aar >= 2000 AND _foerste_registrering_aar <= DATE_EXTRACT(\"year\", NOW()) AND _co2_g_per_km_primaer IS NOT NULL AND _co2_g_per_km_primaer > 0 AND _co2_g_per_km_primaer < 1000 | STATS avg_co2_g_per_km = AVG(_co2_g_per_km_primaer), p50_co2_g_per_km = PERCENTILE(_co2_g_per_km_primaer, 50) BY registration_year = _foerste_registrering_aar | SORT registration_year ASC | LIMIT 40"
+            },
+            "x": { "column": "registration_year" },
+            "y": [
+              { "column": "avg_co2_g_per_km", "label": "Average CO2 g/km", "format": { "type": "number", "decimals": 0 } },
+              { "column": "p50_co2_g_per_km", "label": "Median CO2 g/km", "format": { "type": "number", "decimals": 0 } }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "type": "vis",
+      "id": "inspection-outcomes",
+      "grid": { "x": 0, "y": 35, "w": 24, "h": 10 },
+      "config": {
+        "title": "Inspection Outcomes",
+        "type": "xy",
+        "axis": {
+          "x": { "title": { "visible": false } },
+          "y": { "title": { "visible": false } }
+        },
+        "layers": [
+          {
+            "type": "bar_horizontal",
+            "data_source": {
+              "type": "esql",
+              "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND SynResultatStruktur.SynResultatSynsResultat.keyword IS NOT NULL | STATS car_count = COUNT(*) BY inspection_result = SynResultatStruktur.SynResultatSynsResultat.keyword | SORT car_count DESC | LIMIT 10"
+            },
+            "x": { "column": "inspection_result" },
+            "y": [{ "column": "car_count", "format": { "type": "number", "decimals": 0, "compact": true } }]
+          }
+        ]
+      }
+    },
+    {
+      "type": "vis",
+      "id": "leasing-breakdown",
+      "grid": { "x": 24, "y": 35, "w": 24, "h": 10 },
+      "config": {
+        "title": "Leasing Breakdown by Fuel",
+        "type": "xy",
+        "axis": {
+          "x": { "title": { "visible": false } },
+          "y": { "title": { "visible": false } }
+        },
+        "layers": [
+          {
+            "type": "bar_horizontal",
+            "data_source": {
+              "type": "esql",
+              "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" AND _drivkraft_primaer IS NOT NULL | STATS total_cars = COUNT(*), leased_cars = COUNT(*) WHERE LeasingGyldigFra IS NOT NULL BY primary_fuel = _drivkraft_primaer | EVAL leased_share = 1.0 * leased_cars / total_cars | SORT leased_cars DESC | LIMIT 10"
+            },
+            "x": { "column": "primary_fuel" },
+            "y": [{ "column": "leased_cars", "format": { "type": "number", "decimals": 0, "compact": true } }]
+          }
+        ]
+      }
+    },
+    {
+      "type": "vis",
+      "id": "rare-brands",
+      "grid": { "x": 0, "y": 45, "w": 48, "h": 10 },
+      "config": {
+        "title": "Rare Passenger-Car Brands",
+        "type": "data_table",
+        "data_source": {
+          "type": "esql",
+          "query": "FROM dmr-raw-000002 | WHERE KoeretoejRegistreringStatus.keyword == \"Registreret\" AND KoeretoejArtNavn.keyword == \"Personbil\" | STATS car_count = COUNT(*) BY brand = KoeretoejOplysningGrundStruktur.KoeretoejBetegnelseStruktur.KoeretoejMaerkeTypeNavn.keyword | WHERE brand IS NOT NULL AND car_count <= 50 | SORT car_count ASC | LIMIT 25"
+        },
+        "metrics": [{ "column": "car_count", "format": { "type": "number", "decimals": 0 } }],
+        "rows": [{ "column": "brand" }]
+      }
+    }
+  ],
+  "time_range": { "from": "now-30d", "to": "now" }
+}

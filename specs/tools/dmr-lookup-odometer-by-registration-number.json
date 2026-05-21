@@ -1,0 +1,21 @@
+{
+  "kind": "tool",
+  "id": "dmr-lookup-odometer-by-registration-number",
+  "type": "esql",
+  "description": "Looks up raw and sanity-filtered odometer fields for one exact Danish registration number. Use when a user asks about mileage, odometer readings, whether odometer data is documented, or why mileage may look suspicious.",
+  "configuration": {
+    "query": "FROM dmr-vehicles-flat | WHERE plate == ?registration_number | KEEP plate, vehicle_id, brand, model, first_reg_date, inspection_date, inspection_type, odometer_km_raw, inspection_odometer_km_sane, engine_odometer_km_raw, engine_odometer_km_sane, engine_odometer_documented, engine_odometer_unavailable | LIMIT 10",
+    "params": {
+      "registration_number": {
+        "type": "string",
+        "description": "Exact Danish registration number, for example EN44360"
+      }
+    }
+  },
+  "tags": [
+    "domain",
+    "dmr",
+    "lookup",
+    "odometer"
+  ]
+}

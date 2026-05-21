@@ -1,0 +1,215 @@
+{
+  "title": "Elastic Operations Overview",
+  "description": "Repo-backed Kibana dashboard for local Elastic system, Docker, and log operations over the last 24 hours.",
+  "panels": [
+    {
+      "type": "vis",
+      "id": "log-events-24h",
+      "grid": { "x": 0, "y": 0, "w": 12, "h": 5 },
+      "config": {
+        "title": "",
+        "type": "metric",
+        "data_source": {
+          "type": "esql",
+          "query": "FROM logs-docker.container_logs-default, logs-system.syslog-default | WHERE @timestamp > NOW() - 24 hours | STATS log_events = COUNT(*) | LIMIT 1"
+        },
+        "metrics": [
+          {
+            "type": "primary",
+            "column": "log_events",
+            "label": "Log Events Last 24h",
+            "format": { "type": "number", "decimals": 0, "compact": true }
+          }
+        ]
+      }
+    },
+    {
+      "type": "vis",
+      "id": "active-docker-containers",
+      "grid": { "x": 12, "y": 0, "w": 12, "h": 5 },
+      "config": {
+        "title": "",
+        "type": "metric",
+        "data_source": {
+          "type": "esql",
+          "query": "FROM logs-docker.container_logs-default | WHERE @timestamp > NOW() - 24 hours AND container.name IS NOT NULL | STATS active_containers = COUNT_DISTINCT(container.name) | LIMIT 1"
+        },
+        "metrics": [
+          {
+            "type": "primary",
+            "column": "active_containers",
+            "label": "Active Docker Containers",
+            "format": { "type": "number", "decimals": 0 }
+          }
+        ]
+      }
+    },
+    {
+      "type": "vis",
+      "id": "host-count",
+      "grid": { "x": 24, "y": 0, "w": 12, "h": 5 },
+      "config": {
+        "title": "",
+        "type": "metric",
+        "data_source": {
+          "type": "esql",
+          "query": "FROM logs-system.syslog-default | WHERE @timestamp > NOW() - 24 hours AND host.name IS NOT NULL | STATS host_count = COUNT_DISTINCT(host.name) | LIMIT 1"
+        },
+        "metrics": [
+          {
+            "type": "primary",
+            "column": "host_count",
+            "label": "Hosts with Syslog",
+            "format": { "type": "number", "decimals": 0 }
+          }
+        ]
+      }
+    },
+    {
+      "type": "vis",
+      "id": "max-memory-usage",
+      "grid": { "x": 36, "y": 0, "w": 12, "h": 5 },
+      "config": {
+        "title": "",
+        "type": "metric",
+        "data_source": {
+          "type": "esql",
+          "query": "TS metrics-system.memory-default | WHERE TRANGE(24 hours) | STATS max_memory_usage = MAX(MAX_OVER_TIME(system.memory.actual.used.pct)) | LIMIT 1"
+        },
+        "metrics": [
+          {
+            "type": "primary",
+            "column": "max_memory_usage",
+            "label": "Max Memory Usage",
+            "format": { "type": "percent", "decimals": 1 }
+          }
+        ]
+      }
+    },
+    {
+      "type": "vis",
+      "id": "system-cpu-by-host",
+      "grid": { "x": 0, "y": 5, "w": 24, "h": 10 },
+      "config": {
+        "title": "System CPU by Host",
+        "type": "xy",
+        "axis": {
+          "x": { "title": { "visible": false }, "scale": "temporal", "domain": { "type": "fit", "rounding": false } },
+          "y": { "title": { "visible": false } }
+        },
+        "layers": [
+          {
+            "type": "line",
+            "data_source": {
+              "type": "esql",
+              "query": "TS metrics-system.cpu-default | WHERE TRANGE(24 hours) | STATS avg_cpu = AVG(AVG_OVER_TIME(system.cpu.total.norm.pct)) BY bucket = TBUCKET(15 minutes), host = host.name | SORT bucket ASC | LIMIT 1000"
+            },
+            "x": { "column": "bucket", "label": "@timestamp" },
+            "y": [{ "column": "avg_cpu", "format": { "type": "percent", "decimals": 1 } }],
+            "breakdown_by": { "column": "host" }
+          }
+        ]
+      }
+    },
+    {
+      "type": "vis",
+      "id": "system-memory-by-host",
+      "grid": { "x": 24, "y": 5, "w": 24, "h": 10 },
+      "config": {
+        "title": "System Memory by Host",
+        "type": "xy",
+        "axis": {
+          "x": { "title": { "visible": false }, "scale": "temporal", "domain": { "type": "fit", "rounding": false } },
+          "y": { "title": { "visible": false } }
+        },
+        "layers": [
+          {
+            "type": "line",
+            "data_source": {
+              "type": "esql",
+              "query": "TS metrics-system.memory-default | WHERE TRANGE(24 hours) | STATS avg_memory = AVG(AVG_OVER_TIME(system.memory.actual.used.pct)) BY bucket = TBUCKET(15 minutes), host = host.name | SORT bucket ASC | LIMIT 1000"
+            },
+            "x": { "column": "bucket", "label": "@timestamp" },
+            "y": [{ "column": "avg_memory", "format": { "type": "percent", "decimals": 1 } }],
+            "breakdown_by": { "column": "host" }
+          }
+        ]
+      }
+    },
+    {
+      "type": "vis",
+      "id": "top-docker-log-emitters",
+      "grid": { "x": 0, "y": 15, "w": 24, "h": 10 },
+      "config": {
+        "title": "Top Docker Log Emitters",
+        "type": "xy",
+        "axis": {
+          "x": { "title": { "visible": false } },
+          "y": { "title": { "visible": false } }
+        },
+        "layers": [
+          {
+            "type": "bar_horizontal",
+            "data_source": {
+              "type": "esql",
+              "query": "FROM logs-docker.container_logs-default | WHERE @timestamp > NOW() - 24 hours AND container.name IS NOT NULL | STATS log_events = COUNT(*) BY container_name = container.name | SORT log_events DESC | LIMIT 15"
+            },
+            "x": { "column": "container_name" },
+            "y": [{ "column": "log_events", "format": { "type": "number", "decimals": 0, "compact": true } }]
+          }
+        ]
+      }
+    },
+    {
+      "type": "vis",
+      "id": "docker-cpu-by-container",
+      "grid": { "x": 24, "y": 15, "w": 24, "h": 10 },
+      "config": {
+        "title": "Docker CPU by Container",
+        "type": "xy",
+        "axis": {
+          "x": { "title": { "visible": false }, "scale": "temporal", "domain": { "type": "fit", "rounding": false } },
+          "y": { "title": { "visible": false } }
+        },
+        "layers": [
+          {
+            "type": "line",
+            "data_source": {
+              "type": "esql",
+              "query": "TS metrics-docker.cpu-default | WHERE TRANGE(24 hours) | STATS avg_cpu = AVG(AVG_OVER_TIME(docker.cpu.total.norm.pct)) BY bucket = TBUCKET(15 minutes), container_name = container.name | SORT bucket ASC | LIMIT 1000"
+            },
+            "x": { "column": "bucket", "label": "@timestamp" },
+            "y": [{ "column": "avg_cpu", "format": { "type": "percent", "decimals": 1 } }],
+            "breakdown_by": { "column": "container_name" }
+          }
+        ]
+      }
+    },
+    {
+      "type": "vis",
+      "id": "system-log-volume-by-host",
+      "grid": { "x": 0, "y": 25, "w": 48, "h": 10 },
+      "config": {
+        "title": "System Log Volume by Host",
+        "type": "xy",
+        "axis": {
+          "x": { "title": { "visible": false }, "scale": "temporal", "domain": { "type": "fit", "rounding": false } },
+          "y": { "title": { "visible": false } }
+        },
+        "layers": [
+          {
+            "type": "area_stacked",
+            "data_source": {
+              "type": "esql",
+              "query": "FROM logs-system.syslog-default | WHERE @timestamp > NOW() - 24 hours AND host.name IS NOT NULL | STATS log_events = COUNT(*) BY bucket = DATE_TRUNC(15 minutes, @timestamp), host = host.name | SORT bucket ASC | LIMIT 1000"
+            },
+            "x": { "column": "bucket", "label": "@timestamp" },
+            "y": [{ "column": "log_events", "format": { "type": "number", "decimals": 0, "compact": true } }],
+            "breakdown_by": { "column": "host" }
+          }
+        ]
+      }
+    }
+  ],
+  "time_range": { "from": "now-24h", "to": "now" }
+}

@@ -1,0 +1,20 @@
+{
+  "kind": "agent",
+  "id": "dmr-micro",
+  "name": "DMR Micro Agent",
+  "description": "Ultra-minimal DMR agent for local small-model routing tests with Qwen3.5-9b. Covers plate lookup, fleet overview, top brands/models, fuel mix, performance summary, inspection summary, and leasing. 8 tools only. For full DMR coverage use dmr-core, dmr-performance, dmr-history, or dmr-market.",
+  "instructions_file": "prompts/dmr-micro.instructions.md",
+  "skill_ids": [
+    "dmr-glossary"
+  ],
+  "tool_ids": [
+    "dmr-lookup-by-registration-number",
+    "dmr-car-fleet-overview",
+    "dmr-car-top-brands",
+    "dmr-car-top-models",
+    "dmr-car-fuel-age-summary",
+    "dmr-car-performance-summary",
+    "dmr-car-inspection-summary",
+    "dmr-car-leasing-summary"
+  ]
+}
